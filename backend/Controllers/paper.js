@@ -9,9 +9,9 @@ const uploadPaper = async (req, res) => {
         const { year, branch, subject } = req.body;
         const paper = new Paper({ filename, path, year, branch, subject });
         await paper.save();
-        res.status(201).json({paper , success: true,message : 'File uploaded successfully!'});
+        res.status(201).json({ paper, success: true, message: 'File uploaded successfully!' });
     } catch (error) {
-        res.status(500).json({success: false, message : 'Internal Server Error!', error: error});
+        res.status(500).json({ success: false, message: 'Internal Server Error!', error: error });
         console.error(error);
     }
 }
@@ -25,5 +25,41 @@ const storage = multer.diskStorage({
     },
 });
 
+const viewPapers = async (req, res) => {
+    try {
+        const papers = await Paper.find();
+        res.status(200).json({ papers, success: true, message: 'files Got!' });
 
-module.exports = { uploadPaper, storage }
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal Server Error!', error: error });
+    }
+}
+
+const filterPapers = async (req, res) => {
+    try {
+        const filters = req.query;
+        const query = {};
+
+        if (filters.year) {
+            query.year = filters.year;
+        }
+        if (filters.filename) {
+            query.filename = { $regex: new RegExp(filters.filename, 'i') };
+        }
+        if (filters.subject) {
+            query.subject = filters.subject;
+        }
+
+        if (filters.branch) {
+            query.branch = filters.branch;
+        }
+
+        const papers = await Paper.find(query);
+        res.status(200).json({papers, success: true});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+module.exports = { uploadPaper, storage, viewPapers,filterPapers }

@@ -16,6 +16,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'student'
     },
+    sem:{
+        type: String,
+    },
+    branch: {
+        type: String,
+    },
     email: {
         type: String,
         required: true

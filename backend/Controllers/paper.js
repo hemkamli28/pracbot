@@ -18,7 +18,7 @@ const uploadPaper = async (req, res) => {
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/');
+        cb(null, 'uploads/papers');
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname);

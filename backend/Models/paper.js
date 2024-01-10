@@ -6,7 +6,7 @@ const paperSchema = new mongoose.Schema({
   },
   filename:{
     type: String
-  } ,
+  },
   path: {
     type: String
   },
@@ -15,6 +15,9 @@ const paperSchema = new mongoose.Schema({
   },
   branch: {
     type: String
+  },
+  sem: {
+    type: Number
   }
 });
 

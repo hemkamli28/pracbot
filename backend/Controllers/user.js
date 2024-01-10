@@ -14,7 +14,7 @@ const getUsers = async (req, res) => {
 }
 
 const registerUsers = async (req, res) => {
-  const { fname, lname, enrollment, role, email, password } = req.body;
+  const { fname, lname, enrollment, role, email, password, sem, branch } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
@@ -24,7 +24,7 @@ const registerUsers = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ fname, lname, enrollment, role, email, password: hashedPassword });
+    const user = new User({ fname, lname, enrollment, role, email, password: hashedPassword, sem, branch });
 
     await user.save();
 
@@ -40,7 +40,7 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(500).json({ success: false, message: "Please Enter Correct Credentials" });
     }
@@ -55,8 +55,15 @@ const loginUser = async (req, res) => {
           role: user.role
         }
       }
-      const token = jwt.sign(data, process.env.SECRET, { expiresIn: '5m' });
-      return res.status(200).json({ success: true, token, message: "Login successful!" });
+    
+      if(user.role === 'instructor' || user.role === 'admin') {
+        const token = jwt.sign(data, process.env.SECRET, { expiresIn: '4h' });
+        return res.status(200).json({ success: true, token, message: "Admin/Instructor Login successful!" });
+      }
+      else {
+        const token = jwt.sign(data, process.env.SECRET);
+        return res.status(200).json({ success: true, token, message: "Student Login successful!" });
+      }
     }
   } catch (error) {
     console.error(error);

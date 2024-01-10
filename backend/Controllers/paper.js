@@ -54,6 +54,11 @@ const filterPapers = async (req, res) => {
             query.branch = filters.branch;
         }
 
+        if(filters.sem){
+            query.sem = filters.sem;
+
+        }
+
         const papers = await Paper.find(query);
         res.status(200).json({papers, success: true});
     } catch (error) {

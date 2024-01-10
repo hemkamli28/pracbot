@@ -31,7 +31,7 @@ const UploadPaper = () => {
     return (
         <div className="App">
             <form className="formStyle" onSubmit={submitImage}>
-            <h4>Upload Pdf in React</h4>
+            <h4>Upload Paper </h4>
                 <br />
                 <select
                     className="form-control"
@@ -78,7 +78,7 @@ const UploadPaper = () => {
                     onChange={(e) => setFile(e.target.files[0])}
                 />
                 <br />
-                <button className="btn btn-primary" type="submit">
+                <button className="ring-2 px-3 py-1 rounded-sm" type="submit">
                     Submit
                 </button>
             </form>

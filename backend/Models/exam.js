@@ -17,11 +17,24 @@ const examSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    scheduledBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     filename: {
         type: String
     },
     path: {
         type: String
+    },
+    startTime: {
+        type: String,
+        required: true
+    },
+    endTime: {
+        type: String,
+        required: true
     }
 });
 

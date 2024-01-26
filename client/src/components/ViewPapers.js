@@ -62,22 +62,41 @@ const ViewPapers = () => {
     <div className="App">
       <div className="mt-4">
         <div>
+        
+        <label>
+            Filename:
+          </label>
+            <input className='mx-2 px-2 py-1 ring-1 ring-inset ring-gray-300' type="text" name="filename" value={filter.filename} onChange={handleFilterChange} />
+
           <label>
             Year:
-            <input type="text" name="year" value={filter.year} onChange={handleFilterChange} />
           </label>
-          <label>
-            Filename:
-            <input type="text" name="filename" value={filter.filename} onChange={handleFilterChange} />
-          </label>
+            <select className="mx-2 rounded-md px-2 py-1 ring-1 ring-inset ring-gray-300" name="year" value={filter.year} onChange={handleFilterChange} >
+              <option value="2020">2020</option>
+              <option value="2021">2021</option>
+              <option value="2022">2022</option>
+              <option value="2023">2023</option>
+            </select>
+
           <label>
             Subject:
-            <input type="text" name="subject" value={filter.subject} onChange={handleFilterChange} />
           </label>
+          <select className="mx-2 rounded-md px-2 py-1 ring-1 ring-inset ring-gray-300" name="subject" value={filter.subject} onChange={handleFilterChange} >
+              <option value="IOT">IOT</option>
+              <option value="CD">CD</option>
+              <option value="DBMS">DBMS</option>
+              <option value="CCE">CCE</option>
+            </select>
+          
           <label>
             Branch:
-            <input type="text" name="branch" value={filter.branch} onChange={handleFilterChange} />
           </label>
+          <select className="mx-2 rounded-md px-2 py-1 ring-1 ring-inset ring-gray-300" name="branch" value={filter.branch} onChange={handleFilterChange} >
+              <option value="CBA">CBA</option>
+              <option value="CS">CS</option>
+              <option value="BDA">BDA</option>
+            </select>
+          
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4  ">
           {allPaper == null

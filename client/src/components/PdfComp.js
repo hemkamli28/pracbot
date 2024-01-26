@@ -42,14 +42,14 @@ function PdfComp(props) {
     return (
         <div className="flex justify-center">
             {isModalOpen && (
-                <div className="fixed z-10 inset-0 overflow-y-auto">
+                <div className="fixed z-10 inset-0 overflow-y-auto bg-opacity-50 backdrop-blur-md">
                     <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                         <div
                             className="fixed inset-0 transition-opacity"
                             aria-hidden="true"
                             onClick={closeModal}
                         >
-                            <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+                            <div className="absolute opacity-75"></div>
                         </div>
 
                         <span
@@ -59,8 +59,8 @@ function PdfComp(props) {
                             &#8203;
                         </span>
 
-                        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-                            <div className="p-4 bg-slate-500">
+                        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl ">
+                            <div className="p-4 bg-gray-100 shadow-lg">
                                 <div className="flex justify-end gap-4">
                                     <MdOutlineFileDownload className="text-[2rem] cursor-pointer" onClick={() => handleDownload(props.pdfFile)} />
                                     <IoCloseSharp className="text-[2rem] cursor-pointer" onClick={closeModal} />
@@ -68,22 +68,26 @@ function PdfComp(props) {
                                 <p>
                                     Page  {pageNumber} of {numPages}
                                 </p>
-                                <Document
-                                    file={props.pdfFile}
-                                    onLoadSuccess={onDocumentLoadSuccess}
-                                >
-                                    {Array.apply(null, Array(numPages))
-                                        .map((x, i) => i + 1)
-                                        .map((page) => (
-                                            <Page
-                                                key={page}
-                                                className="mt-3 bg-slate-700"
-                                                pageNumber={page}
-                                                renderTextLayer={false}
-                                                renderAnnotationLayer={false}
-                                            />
-                                        ))}
-                                </Document>
+
+                                <div className="flex justify-center ">
+                                    <Document
+                                        file={props.pdfFile}
+                                        className=""
+                                        onLoadSuccess={onDocumentLoadSuccess}
+                                    >
+                                        {Array.apply(null, Array(numPages))
+                                            .map((x, i) => i + 1)
+                                            .map((page) => (
+                                                <Page
+                                                    key={page}
+                                                    className=""
+                                                    pageNumber={page}
+                                                    renderTextLayer={false}
+                                                    renderAnnotationLayer={false}
+                                                />
+                                            ))}
+                                    </Document>
+                                </div>
                             </div>
                         </div>
                     </div>

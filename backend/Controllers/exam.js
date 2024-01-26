@@ -29,7 +29,7 @@ const sendMail = async (to, subject, text) => {
 const uploadExam = async (req, res) => {
     try {
         const { filename, path } = req.file;
-        const { name, branch, sem, subject, startTime, endTime } = req.body;
+        const { name, branch, sem, subject, startTime, endTime , date} = req.body;
 
         const st = moment(startTime, 'HH:mm', true).toDate();
         const et = moment(endTime, 'HH:mm', true).toDate();
@@ -46,15 +46,15 @@ const uploadExam = async (req, res) => {
             endTime: et,
             filename,
             path,
+            date
         });
         await newExam.save();
         
         const students = await User.find({ sem, branch });
         const emailSubject = 'Exam Notification';
 
-
         const emailPromises = students.map(async (student) => {
-            let emailText = `Dear ${student.fname}, ${name} of ${subject} has been uploaded. Good luck!`;
+            let emailText = `Dear ${student.fname}, ${name} of ${subject} has been Scheduled on ${date} at ${startTime} am. Good luck!`;
             await sendMail(student.email, emailSubject, emailText);
         });
 

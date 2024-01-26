@@ -28,6 +28,10 @@ const examSchema = new mongoose.Schema({
     path: {
         type: String
     },
+    date:{
+        type: String,
+        required: true
+    },
     startTime: {
         type: String,
         required: true

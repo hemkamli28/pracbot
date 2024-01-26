@@ -11,7 +11,7 @@ function PdfThumbnail(props) {
 
   return (
     <div className="flex justify-center ">
-      <div className="p-2 rounded-md bg-slate-300 ">
+      <div className="p-2 rounded-md bg-slate-200 ">
         <Document file={props.pdfFile} onLoadSuccess={onDocumentLoadSuccess}>
           <Page
             pageNumber={pageNumber}

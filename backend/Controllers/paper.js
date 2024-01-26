@@ -1,5 +1,6 @@
 const multer = require('multer');
 const Paper = require('../Models/paper');
+const User = require('../Models/user');
 
 
 const uploadPaper = async (req, res) => {
@@ -67,4 +68,18 @@ const filterPapers = async (req, res) => {
     }
 }
 
-module.exports = { uploadPaper, storage, viewPapers,filterPapers }
+const getPapers = async (req, res) => {
+    try {
+        const user = await User.findOne({email: req.user.email});
+        const { branch} = user;
+        console.log(user)
+        const papers = await Paper.find({branch, sem});
+        res.status(200).json({papers, success: true});
+
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+        
+    }
+}
+
+module.exports = { uploadPaper, storage, viewPapers,filterPapers, getPapers }

@@ -58,11 +58,11 @@ const loginUser = async (req, res) => {
     
       if(user.role === 'instructor' || user.role === 'admin') {
         const token = jwt.sign(data, process.env.SECRET, { expiresIn: '4h' });
-        return res.status(200).json({ success: true, token, message: "Admin/Instructor Login successful!" });
+        return res.status(200).json({user, success: true, token, message: "Admin/Instructor Login successful!" });
       }
       else {
         const token = jwt.sign(data, process.env.SECRET);
-        return res.status(200).json({ success: true, token, message: "Student Login successful!" });
+        return res.status(200).json({user, success: true, token, message: "Student Login successful!" });
       }
     }
   } catch (error) {

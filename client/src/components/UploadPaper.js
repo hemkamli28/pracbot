@@ -23,18 +23,24 @@ const UploadPaper = () => {
             );
             console.log(result);
             alert("Uploaded Successfully!!!");
+            setYear("");
+            setSubject("");
+            setBranch("");
+            setFile("");
         }
         catch (e) {
             console.log(e);
+            alert("Failed!");
+
         }
     };
     return (
         <div className="App">
+            <h2 className='my-[2rem] font-bold text-2xl md:text-[1.75rem] text-gray-800'>Upload a Paper</h2>
+
             <form className="formStyle" onSubmit={submitImage}>
-            <h4>Upload Paper </h4>
-                <br />
                 <select
-                    className="form-control"
+                    className="mb-3 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:border-indigo-200 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                     value={branch}
                     onChange={(e) => setBranch(e.target.value)}
                     required
@@ -45,7 +51,8 @@ const UploadPaper = () => {
                     <option value="CS">CS</option>
                 </select>
                 <select
-                    className="form-control"
+                    className="mb-3 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:border-indigo-200 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     required
@@ -58,7 +65,8 @@ const UploadPaper = () => {
                     <option value="DBMS">DBMS</option>
                 </select>
                 <select
-                    className="form-control"
+                    className="mb-3 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:border-indigo-200 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
                     required
@@ -72,15 +80,17 @@ const UploadPaper = () => {
                 <br />
                 <input
                     type="file"
-                    className="form-control"
+                    className="mb-3 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:border-indigo-200 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+
                     accept="application/pdf"
                     required
                     onChange={(e) => setFile(e.target.files[0])}
                 />
                 <br />
-                <button className="ring-2 px-3 py-1 rounded-sm" type="submit">
-                    Submit
-                </button>
+                <div className='flex '>
+                    <button type="submit" className="w-full mt-4 bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-800">Upload Paper</button>
+                </div>
+
             </form>
 
         </div>

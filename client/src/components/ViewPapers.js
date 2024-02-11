@@ -85,7 +85,7 @@ const ViewPapers = () => {
               <option value="IOT">IOT</option>
               <option value="CD">CD</option>
               <option value="DBMS">DBMS</option>
-              <option value="CCE">CCE</option>
+              <option value="ESFP">ESFP</option>
             </select>
           
           <label>

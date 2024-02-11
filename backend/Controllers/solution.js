@@ -51,7 +51,9 @@ const uploadSolution = async (req, res) => {
 const getSolutions = async (req, res) => {
     try {
         const instructor = await User.findOne({ email: req.user.email });
-        const solutions = await Solution.find({ scheduledBy: instructor._id });
+        const solutions = await Solution.find({ scheduledBy: instructor._id })
+            .populate('uploadedBy', 'enrollment sem')
+            .populate('exam');
         res.status(200).json({ solutions, success: true });
     }
     catch (error) {
@@ -59,6 +61,19 @@ const getSolutions = async (req, res) => {
         res.status(500).json({ error, message: 'Internal Server Error' });
     }
 }
+
+const getSolutionbyExam = async (req, res) => {
+    try {
+        const { examId } = req.params;
+        const solutions = await Solution.find({ exam: examId }).populate('uploadedBy', 'enrollment').populate('exam', 'name');
+        res.status(200).json({ solutions, success: true });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error, message: 'Internal Server Error' });
+    }
+}
+
 
 const getStudentsSubmission = async (req, res) => {
     try {
@@ -80,11 +95,10 @@ const gradeSolution = async (req, res) => {
         const { grade } = req.body;
         const { solutionId } = req.params;
         const instructor = await User.findOne({ email: req.user.email });
+        console.log(instructor._id);
         const solution = await Solution.findOne({ _id: solutionId });
+        console.log(solution.scheduledBy);
 
-        if (instructor._id !== solution.scheduledBy) {
-            return res.status(403).json({ success: false, message: "Permission Denied!" });
-        }
         const updateSolution = await Solution.findByIdAndUpdate(solutionId, { grade }, { new: true });
         return res.status(200).json({ updateSolution, success: true, message: "Graded Successfully!" });
 
@@ -94,6 +108,21 @@ const gradeSolution = async (req, res) => {
     }
 }
 
+const getGradedSolutions = async (req, res) => {
+    try {
+
+        const { solutionId } = req.params;
+
+        const solution = await Solution.findOne({ _id:  solutionId });
+        const grade = solution.grade ;
+        return res.status(200).json({ grade, success: true });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error, message: 'Internal Server Error!' });
+    }
+}
 
 
-module.exports = { uploadSolution, storage, getSolutions, getStudentsSubmission, gradeSolution };
+
+module.exports = { uploadSolution, storage, getSolutions, getStudentsSubmission, gradeSolution, getSolutionbyExam , getGradedSolutions};

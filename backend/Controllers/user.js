@@ -52,7 +52,8 @@ const loginUser = async (req, res) => {
       const data = {
         user: {
           email: user.email,
-          role: user.role
+          role: user.role,
+          id: user._id
         }
       }
     
@@ -61,7 +62,7 @@ const loginUser = async (req, res) => {
         return res.status(200).json({user, success: true, token, message: "Admin/Instructor Login successful!" });
       }
       else {
-        const token = jwt.sign(data, process.env.SECRET);
+        const token = jwt.sign(data, process.env.SECRET, { expiresIn: '4h' });
         return res.status(200).json({user, success: true, token, message: "Student Login successful!" });
       }
     }
@@ -71,5 +72,36 @@ const loginUser = async (req, res) => {
   }
 }
 
+const checkRole = async (req,res)=>{
+  try {
+    const { token } = req.params;
+    const decodedToken = jwt.decode(token);
+    
+    const role = decodedToken.user.role; 
+    return res.status(200).json({role, success: true });
+  } catch (error) {
+    return res.status(500).json({ error: error, success: false });
+  }
+}
 
-module.exports = { getUsers, registerUsers, loginUser }
+const checkUser = async (req,res)=>{
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    const data = {
+      user: {
+        email: user.email,
+        role: user.role,
+        id: user._id
+      }
+    }
+    const role = user.role;
+    const token = jwt.sign(data, process.env.SECRET, { expiresIn: '4h' });
+    
+    return res.status(200).json({token, role ,success: true });
+  } catch (error) {
+    return res.status(500).json({ error: error, success: false });
+  }
+}
+
+module.exports = { getUsers, registerUsers, loginUser,checkRole, checkUser }

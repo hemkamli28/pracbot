@@ -29,7 +29,7 @@ const sendMail = async (to, subject, text) => {
 const uploadExam = async (req, res) => {
     try {
         const { filename, path } = req.file;
-        const { name, branch, sem, subject, startTime, endTime , date} = req.body;
+        const { name, branch, sem, subject, startTime, endTime, date } = req.body;
 
         const st = moment(startTime, 'HH:mm', true).toDate();
         const et = moment(endTime, 'HH:mm', true).toDate();
@@ -49,7 +49,7 @@ const uploadExam = async (req, res) => {
             date
         });
         await newExam.save();
-        
+
         const students = await User.find({ sem, branch });
         const emailSubject = 'Exam Notification';
 
@@ -73,18 +73,51 @@ const uploadExam = async (req, res) => {
 
 const getStudentExams = async (req, res) => {
     try {
-
         const student = await User.findOne({ email: req.user.email });
         const { sem, branch } = student;
 
-        const exams = await Exam.find({ sem, branch });
-        res.status(200).json({ exams, success: true });
+        const today = new Date().toISOString().split('T')[0];
 
+        const exams = await Exam.find({
+            sem,
+            branch,
+            date: today
+        });
+
+        res.status(200).json({ exams, success: true });
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ error, message: 'Internal Server Error' });
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-}
+};
+
+
+const getUpcomingExams = async (req, res) => {
+    try {
+        const student = await User.findOne({ email: req.user.email });
+        const { sem, branch } = student;
+
+        // Get today's date
+        const today = new Date().toISOString().split('T')[0];
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const nextDay = tomorrow.toISOString().split('T')[0];
+
+        // Find exams scheduled for the future (after today)
+        const upcomingExams = await Exam.find({
+            sem,
+            branch,
+            date: { $gte: nextDay }
+        }).sort({ date: 1 });
+
+        res.status(200).json({ exams: upcomingExams, success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
 
 const getInstructorExam = async (req, res) => {
     try {
@@ -110,4 +143,4 @@ const storage = multer.diskStorage({
 });
 
 
-module.exports = { uploadExam, storage, getStudentExams, getInstructorExam };
+module.exports = { uploadExam, storage, getStudentExams, getInstructorExam, getUpcomingExams };

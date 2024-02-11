@@ -7,14 +7,16 @@ const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(cookies['access_token'] || '');
   const [isAuthenticated, setIsAuthenticated] = useState(true);
 
+  
 
   useEffect(() => {
     setAccessToken(cookies.access_token);
     setIsAuthenticated(true);
     if (!cookies.access_token) {
       setIsAuthenticated(false);
-      console.log('NOt');
-    } 
+      console.log('Not');
+    }
+      console.log("access token", accessToken);
   }, [cookies]);
 
   const handleLogout = () => {

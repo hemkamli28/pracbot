@@ -3,21 +3,25 @@ import { Link } from 'react-router-dom'
 import AuthContext from '../Context/AuthContext';
 
 const Navbar = () => {
-    const { handleLogout, accessToken} = useContext(AuthContext);
+    const { handleLogout, accessToken } = useContext(AuthContext);
 
     return (
         <>
             <nav class=" p-4">
                 <div class="container mx-auto flex justify-between items-center">
-                    <div class=" font-bold text-lg">Your Logo</div>
+                    <div class=" font-bold text-lg">
+                        <Link to="/">
+                            PracBot
+                        </Link>
+                    </div>
 
                     <div class="space-x-4 flex justify-between">
-                        {accessToken? <div>
+                        {accessToken ? <div>
                             <p onClick={handleLogout}>Logout</p>
-                        </div>:
-                        <Link to="/login">
-                           <p className=''>Login</p>
-                        </Link>
+                        </div> :
+                            <Link to="/login">
+                                <p className=''>Login</p>
+                            </Link>
                         }
                     </div>
                 </div>

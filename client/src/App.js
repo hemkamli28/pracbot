@@ -8,28 +8,37 @@ import StudentDashboard from './components/StudentDashboard';
 import ViewPapers from './components/ViewPapers';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AuthProvider from './Context/AuthProvider';
-
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import GetSolutions from './components/GetSolutions';
 function App() {
   return (
     <>
+      <GoogleOAuthProvider clientId="729680220811-ikh30vg95j4710spbisa0qhbm540mmov.apps.googleusercontent.com">
         <BrowserRouter>
-      <AuthProvider>
 
-          <Navbar />
-          <Routes>
-            <Route exact path="/" element={<ViewPapers />} />
-            <Route exact path="/login" element={<Login />} />
+          <AuthProvider>
 
-            <Route path="/user/*" element={<PrivateRoute />} >
-              <Route path="student-dashboard" element={<StudentDashboard />} role="student" />
-              <Route path="admin-dashboard" element={<AdminDashboard />} role="admin"/>
-              <Route path="instructor-dashboard" element={<InstructorDashboard />} role="instructor"/>
-            </Route>
+            <Navbar />
+            <Routes>
+              <Route exact path="/" element={<ViewPapers />} />
+              <Route exact path="/login" element={<Login />} />
 
-          </Routes>
+              <Route path="/user/*" element={<PrivateRoute role="student" />}>
+                <Route path="student-dashboard" element={<StudentDashboard />} />
+              </Route>
+              <Route path="/user/*" element={<PrivateRoute role="admin" />}>
+                <Route path="admin-dashboard" element={<AdminDashboard />} />
+              </Route>
+              <Route path="/user/*" element={<PrivateRoute role="instructor" />}>
+                <Route path="instructor-dashboard" element={<InstructorDashboard />} />
+              </Route>
+              <Route path="/exams/:examId/solutions" element={<GetSolutions />} />
 
-      </AuthProvider>
+            </Routes>
+
+          </AuthProvider>
         </BrowserRouter>
+      </GoogleOAuthProvider>
 
     </>
   );

@@ -1,9 +1,13 @@
 import React from 'react'
+import GetStudentsExam from './GetStudentsExam'
 
 const StudentDashboard = () => {
   return (
     <>
-      Student Dashboard
+        <section>
+        
+          <GetStudentsExam />
+        </section>
     </>
     )
 }

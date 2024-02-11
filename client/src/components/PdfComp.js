@@ -17,7 +17,10 @@ function PdfComp(props) {
         setNumPages(numPages);
     }
 
-    const closeModal = () => setIsModalOpen(false);
+    const closeModal = () => {
+        setIsModalOpen(false);
+        props.onClose(); // Call onClose to reset pdfFile state in GetSolutions component
+    };
 
     const handleDownload = async (filename) => {
         try {

@@ -59,9 +59,9 @@ const ViewPapers = () => {
   }, [filter]);
 
   return (
-    <div className="App">
-      <div className="mt-4">
-        <div>
+    <div className="App  ">
+      <div className="pt-8">
+        <div className='pb-3'>
         
         <label>
             Filename:
@@ -108,7 +108,7 @@ const ViewPapers = () => {
                   onClick={() => showPdf(data.filename)}
                 >
                   <PdfThumbnail pdfFile={`http://localhost:5000/uploads/${data.filename}`} />
-                  <h6>{data.filename}</h6>
+                  <h6>{data.filename.slice(0, data.filename.indexOf('.pdf'))} - {data.year}</h6>
                 </div>
               ))}
         </div>

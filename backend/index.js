@@ -16,6 +16,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads', 'papers')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads', 'exams')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads', 'solutions')));
 
 app.use('/paper', paperRoutes);

@@ -95,19 +95,19 @@ const Login = () => {
   };
 
   return (
-    <section className="flex justify-center items-center h-[90vh]">
-        <div className="max-w-md w-full p-6 bg-[#ffffff] rounded-2xl shadow-xl ring-2 ring-gray-100">
+    <section className="flex justify-center items-center h-[92.45vh] bg-gradient-to-r from-[#2980b9] to-[#2c3e50]  ">
+        <div className="max-w-md w-full p-6  rounded-2xl backdrop-blur-sm bg-gray-300/30 shadow-xl ">
         <div className='flex justify-center'>
           <h2 className='font-bold text-[1.75rem] pb-4'>Login</h2>
         </div>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label className="block mb-2" htmlFor="email">Email</label>
-            <input className="w-full px-3 py-2 border rounded-md border-gray-400 focus:outline-none focus:border-indigo-300" type="email" name="email" value={input.email} onChange={handleChange} />
+            <input className="w-full px-3 py-2 border rounded-md border-gray-400 focus:outline-none focus:border-[#2c3e50]" type="email" name="email" value={input.email} onChange={handleChange} />
           </div>
           <div className="mb-4">
             <label className="block mb-2" htmlFor="password">Password</label>
-            <input className="w-full px-3 py-2 border rounded-md border-gray-400 focus:outline-none focus:border-indigo-300" type="password" name="password" value={input.password} onChange={handleChange} />
+            <input className="w-full px-3 py-2 border rounded-md border-gray-400 focus:outline-none focus:border-[#2c3e50]" type="password" name="password" value={input.password} onChange={handleChange} />
           </div>
           <div className="mt-[2.25rem] mb-5 flex justify-around">
             <GoogleLogin
@@ -118,6 +118,12 @@ const Login = () => {
                 console.log(decoded);
                 checkRole(decoded.email);
                 console.log(userRole);
+                swal({
+          title: "Congratulations",
+          text: "Login Successfull!",
+          icon: "success",
+          button: "Ok",
+        });
               }}
               onError={() => {
                 console.log('Login Failed');
@@ -126,7 +132,7 @@ const Login = () => {
               shape='pill'
             />
             <div className='max-w-full'>
-              <button type="submit" className="w-[11rem] bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-800">Login</button>
+              <button type="submit" className="w-[11rem] bg-blue-600  text-white py-2 px-4 rounded-full hover:bg-indigo-800">Login</button>
             </div>
           </div>
         </form>

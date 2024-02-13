@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import AuthContext from '../Context/AuthContext';
+import swal from 'sweetalert';
 
 const UploadExam = () => {
   const { accessToken } = useContext(AuthContext);
@@ -37,7 +38,12 @@ const UploadExam = () => {
       );
       console.log(result);
       console.log("upload successful!");
-      alert("Uploaded Successfully!!!");
+      swal({
+        title: "Successfull",
+        text: "Exam Scheduled Successfully!", 
+        icon: "success",
+        button: "Ok",
+      });
       setName("");
       setSubject("")
       setBranch("");

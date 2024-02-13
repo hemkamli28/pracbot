@@ -7,7 +7,7 @@ const Navbar = () => {
 
     return (
         <>
-            <nav class=" p-4">
+            <nav class=" p-4 shadow-md  bg-gradient-to-r from-[#2980b9] to-[#2c3e50] text-white">
                 <div class="container mx-auto flex justify-between items-center">
                     <div class=" font-bold text-lg">
                         <Link to="/">

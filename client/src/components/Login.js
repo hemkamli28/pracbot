@@ -4,7 +4,9 @@ import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import swal from 'sweetalert';
 
+  
 const Login = () => {
   const [userRole, setUserRole] = useState(null);
   const [cookies, setCookie] = useCookies(['access_token']);
@@ -23,11 +25,14 @@ const Login = () => {
         }, 2000);
       } else {
         setCookie('access_token', token, { maxAge: 24 * 60 * 60 });
+       
         setTimeout(() => {
+        
           navigate('/user/student-dashboard');
         }, 2000);
       }
     } catch (error) {
+      
       console.log(error);
     }
   };
@@ -54,18 +59,37 @@ const Login = () => {
       if (user.role === 'instructor' || user.role === 'admin') {
         setCookie('access_token', token, { maxAge: 4 * 60 * 60 });
         const redirectPath = user.role === 'admin' ? '/user/admin-dashboard' : '/user/instructor-dashboard';
+        swal({
+          title: "Congratulations",
+          text: "Login Successfull!",
+          icon: "success",
+          button: "Ok",
+        });
         setTimeout(() => {
           navigate(redirectPath);
         }, 2000);
       } else {
         setCookie('access_token', token, { maxAge: 24 * 60 * 60 });
+        swal({
+          title: "Congratulations",
+          text: "Login Successfull!",
+          icon: "success",
+          button: "Ok",
+        });
         setTimeout(() => {
           navigate('/user/student-dashboard');
         }, 2000);
       }
       console.log('Login successful!');
+    
     } catch (error) {
       console.log('Invalid Credentials!');
+      swal({
+        title: "Sorry",
+        text: "Login Failed!",
+        icon : "error",
+        button: "Ok",
+      });
       console.log(error);
     }
   };

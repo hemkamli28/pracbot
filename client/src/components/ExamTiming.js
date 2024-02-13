@@ -22,7 +22,7 @@ const ExamTiming  = ({ deadline }) => {
   const remainingMinutes = Math.floor((time / MINUTE) % 60);
   const remainingSeconds = Math.floor((time / SECOND) % 60);
   return (
-    <div className="">
+    <div className="text-red-600 font-bold text-xl">
        {formatTime(totalHours)}:{formatTime(remainingMinutes)}:{formatTime(remainingSeconds)}
     </div>
   );

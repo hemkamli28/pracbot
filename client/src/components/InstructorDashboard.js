@@ -6,12 +6,12 @@ import GetInstructorExam from './GetInstructorExam'
 const InstructorDashboard = () => {
   return (
     <>
-      <section className='flex justify-around items-center flex-wrap'>
-        <div className='m-4 p-2'>
+      <section className='bg-gray-200 flex justify-center flex-col-reverse flex-wrap'>
+        <div className='m-1 p-2'>
           <UploadExam />
         </div>
         {/* <GetSolutions /> */}
-        <div className='h-[70vh] m-3 p-2'>
+        <div className=' m-3 p-2'>
           <h2 className='text-[1.65rem] font-bold mb-[2rem]'>Scheduled Exam</h2>
           <GetInstructorExam />
         </div>

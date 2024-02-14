@@ -23,7 +23,10 @@ const GetStudentsExam = () => {
           `${process.env.REACT_APP_SERVERURL}/exam/getforstudents`,
           { headers }
         );
-        setTodayExams(todayResponse.data.exams);
+        const todayExamsData = todayResponse.data.exams.filter(
+          exam => new Date(exam.endTime) > new Date()
+        );
+        setTodayExams(todayExamsData);
 
         const upcomingResponse = await axios.get(
           `${process.env.REACT_APP_SERVERURL}/exam/getupcoming`,

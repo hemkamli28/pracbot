@@ -96,7 +96,7 @@ const Login = () => {
 
   return (
     <section className="flex justify-center items-center h-[92.45vh] bg-gradient-to-r from-[#2980b9] to-[#2c3e50]  ">
-        <div className="max-w-md w-full p-6  rounded-2xl backdrop-blur-sm bg-gray-300/30 shadow-xl ">
+        <div className=" lg:max-w-md w-[20rem] lg:w-full p-6  rounded-2xl backdrop-blur-sm bg-gray-300/30 shadow-xl ">
         <div className='flex justify-center'>
           <h2 className='font-bold text-[1.75rem] pb-4'>Login</h2>
         </div>
@@ -109,7 +109,7 @@ const Login = () => {
             <label className="block mb-2" htmlFor="password">Password</label>
             <input className="w-full px-3 py-2 border rounded-md border-gray-400 focus:outline-none focus:border-[#2c3e50]" type="password" name="password" value={input.password} onChange={handleChange} />
           </div>
-          <div className="mt-[2.25rem] mb-5 flex justify-around">
+          <div className="mt-[2.25rem] mb-5 flex flex-wrap lg:gap-0 gap-4 justify-around">
             <GoogleLogin
               hosted_domain="gnu.ac.in"
               theme='filled_black'

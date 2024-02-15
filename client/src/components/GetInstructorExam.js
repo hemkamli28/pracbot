@@ -83,8 +83,8 @@ function GetInstructorExam() {
                             <td className="border px-4 py-2 border-gray-300">{exam.branch}</td>
                             <td className="border px-4 py-2 border-gray-300">{exam.sem}</td>
                             <td className="border px-4 py-2 border-gray-300">{exam.subject}</td>
-                            <td className="border px-4 py-2 border-gray-300">
-                                <button type="submit" className="bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-800">
+                            <td className="border px-4 py-2 border-gray-300 flex justify-center">
+                                <button type="submit" className="bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-800 ">
                                     <Link to={`/exams/${exam._id}/solutions`}>View Solutions</Link>
                                 </button>
                             </td>

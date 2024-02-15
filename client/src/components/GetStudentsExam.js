@@ -72,8 +72,8 @@ const GetStudentsExam = () => {
   };
 
   return (
-    <div>
-      <div className="flex flex-wrap justify-center">
+    <div className="bg-gray-200 h-[90vh]">
+      <div className="flex flex-wrap justify-center ">
         <div className="w-full lg:w-1/2 px-4">
           <h2 className="text-center font-bold text-3xl p-2">Today's Exams</h2>
           <div className="flex flex-wrap justify-center gap-4 items-center m-2">

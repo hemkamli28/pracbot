@@ -13,7 +13,8 @@ const solutionSchema = new mongoose.Schema({
         type: String
     },
     grade:{
-        type: String
+        type: String,
+        default: '0'
     },
     scheduledBy: {
         type: mongoose.Schema.Types.ObjectId,

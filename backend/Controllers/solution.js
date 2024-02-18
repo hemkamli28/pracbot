@@ -90,7 +90,7 @@ const getStudentsSubmission = async (req, res) => {
     const student = await User.findOne({ email: req.user.email });
     const studentId = student._id;
 
-    const solutions = await Solution.find({ uploadedBy: studentId });
+    const solutions = await Solution.find({ uploadedBy: studentId }).populate("exam");
     res.status(200).json({ solutions, success: true });
   } catch (error) {
     console.log(error);
@@ -121,18 +121,6 @@ const gradeSolution = async (req, res) => {
   }
 };
 
-const getGradedSolutions = async (req, res) => {
-  try {
-    const { solutionId } = req.params;
-
-    const solution = await Solution.findOne({ _id: solutionId });
-    const grade = solution.grade;
-    return res.status(200).json({ grade, success: true });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error, message: "Internal Server Error!" });
-  }
-};
 
 module.exports = {
   uploadSolution,
@@ -141,5 +129,4 @@ module.exports = {
   getStudentsSubmission,
   gradeSolution,
   getSolutionbyExam,
-  getGradedSolutions,
 };

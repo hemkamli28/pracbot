@@ -1,31 +1,30 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import 'datatables.net-dt'; // Import DataTables library
-import 'datatables.net-dt/css/jquery.dataTables.css'; // Import DataTables CSS file
+import 'datatables.net-dt';
+import 'datatables.net-dt/css/jquery.dataTables.css';
 import $ from 'jquery';
 import AuthContext from "../Context/AuthContext";
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import PdfComp from './PdfComp';
+import { Link } from 'react-router-dom';
 
-function GetInstructorExam() {
-    const [exams, setExams] = useState([]);
+function StudentGrades() {
+    const [solutions, setSolutions] = useState([]);
     const { accessToken } = useContext(AuthContext);
     const tableRef = useRef(null);
     const [selectedSolution, setSelectedSolution] = useState(null);
     const [pdfFile, setPdfFile] = useState(null);
-    const dataTableRef = useRef(null); // Ref to store DataTable instance
+    const dataTableRef = useRef(null);
 
-    // Function to format time to AM/PM format
     const formatTime = (timeString) => {
         const date = new Date(timeString);
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };
 
-    // Function to format date to DD/MM/YY format
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-GB');
     };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -33,20 +32,19 @@ function GetInstructorExam() {
                     Authorization: `Bearer ${accessToken}`,
                 };
                 const response = await axios.get(
-                    `${process.env.REACT_APP_SERVERURL}/exam/getforinstructors`,
+                    `${process.env.REACT_APP_SERVERURL}/solution/grades`, // Update endpoint
                     { headers }
                 );
-                setExams(response.data.exams);
+                setSolutions(response.data.solutions);
             } catch (error) {
-                console.error('Error fetching exams:', error);
+                console.error('Error fetching solutions:', error);
             }
         };
-    
+
         fetchData();
-    
+
         setTimeout(() => {
             if (tableRef.current && !dataTableRef.current) {
-                // Initialize DataTable only if it hasn't been initialized yet
                 dataTableRef.current = $(tableRef.current).DataTable({
                     searching: true,
                     paging: true,
@@ -62,21 +60,20 @@ function GetInstructorExam() {
                             previous: 'Previous'
                         }
                     },
-                    stripeClasses: [], // Empty array to disable DataTables' default stripe classes
-                    // Set default sorting by date column, ascending order
+                    stripeClasses: [],
                     order: [[1, 'asc']]
                 });
             }
             return () => {
-                // Cleanup: Destroy DataTable instance when component unmounts
                 if (dataTableRef.current) {
                     dataTableRef.current.destroy();
                     dataTableRef.current = null;
                 }
             };
         }, 1000);
-    
-    }, [accessToken, exams]);
+
+    }, [accessToken, solutions]);
+
     const showPdf = (pdf) => {
         setPdfFile(`http://localhost:5000/uploads/${pdf}`);
     };
@@ -90,6 +87,7 @@ function GetInstructorExam() {
         setPdfFile(null);
         setSelectedSolution(null);
     };
+
     return (
         <div className="overflow-x-auto  md:mr-[0rem] mr-0">
             <table ref={tableRef} className="table-auto w-full border border-gray-300">
@@ -97,34 +95,21 @@ function GetInstructorExam() {
                     <tr>
                         <th className="px-4 py-2 border-gray-300">Name</th>
                         <th className="px-4 py-2 border-gray-300">Date</th>
-                        <th className="px-4 py-2 border-gray-300">Start Time</th>
-                        <th className="px-4 py-2 border-gray-300">End Time</th>
-                        <th className="px-4 py-2 border-gray-300">Branch</th>
-                        <th className="px-4 py-2 border-gray-300">Sem</th>
                         <th className="px-4 py-2 border-gray-300">Subject</th>
+                        <th className="px-4 py-2 border-gray-300">Grade</th>
                         <th className="px-4 py-2 border-gray-300">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {exams.map((exam, index) => (
-                        <tr key={exam._id} >
-                            <td className="border px-4 py-2 border-gray-300">{exam.name}</td>
-                            <td className="border px-4 py-2 border-gray-300">{formatDate(exam.date)}</td>
-                            <td className="border px-4 py-2 border-gray-300">{formatTime(exam.startTime)}</td>
-                            <td className="border px-4 py-2 border-gray-300">{formatTime(exam.endTime)}</td>
-                            <td className="border px-4 py-2 border-gray-300">{exam.branch}</td>
-                            <td className="border px-4 py-2 border-gray-300">{exam.sem}</td>
-                            <td className="border px-4 py-2 border-gray-300">{exam.subject}</td>
+                    {solutions.map((solution) => (
+                        <tr key={solution._id} >
+                            <td className="border px-4 py-2 border-gray-300">{solution.exam.name}</td>
+                            <td className="border px-4 py-2 border-gray-300">{formatDate(solution.exam.date)}</td>
+                            <td className="border px-4 py-2 border-gray-300">{solution.exam.subject}</td>
+                            <td className="border px-4 py-2 border-gray-300"> {solution.grade < 1 ? "N/A" : solution.grade}</td>
                             <td className="border py-2 border-gray-300 flex justify-center gap-4 ">
-                                <button type="submit" className="bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-800 " onClick={() => handleViewSolution(exam)}>
-                                    View Paper
-                                </button>
-                                <button type="submit" className="bg-[#575f66] text-white py-2 px-4 rounded-md hover:bg-[#394046] ">
-                                    <Link to={`/exams/${exam._id}/solutions`}>Solutions</Link>
-                                </button>
-                               
-                                <button type="submit" className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-800 ">
-                                    Delete
+                                <button type="submit" className="bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-800 " onClick={() => handleViewSolution(solution)}>
+                                    View Solution
                                 </button>
                             </td>
                         </tr>
@@ -138,4 +123,4 @@ function GetInstructorExam() {
     );
 }
 
-export default GetInstructorExam;
+export default StudentGrades;

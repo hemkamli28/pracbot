@@ -71,18 +71,51 @@ const uploadExam = async (req, res) => {
     }
 }
 
+const getStudentOngoing = async (req,res) =>{
+    try {
+        
+        const student = await User.findOne({ email: req.user.email });
+        const exams = await Exam.find({ sem: student.sem, branch: student.branch }).populate("scheduledBy", "fname lname");;
+
+        const currentTime = new Date();
+        for (const exam of exams) {
+            const startTime = new Date(exam.startTime);
+            const endTime = new Date(exam.endTime);
+            if (currentTime >= startTime && currentTime <= endTime) {
+                return res.status(200).json({ exam, success: true });
+            }
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+        
+    }
+}
+
+const deleteExam = (req, res) => {
+    try {
+        const {examId }= req.params;
+        const deletedExam = Exam.findByIdAndDelete(examId);
+        res.status(200).json({ deletedExam, success: true });
+
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+        
+    }
+}
+
 const getStudentExams = async (req, res) => {
     try {
         const student = await User.findOne({ email: req.user.email });
         const { sem, branch } = student;
 
-        const today = new Date().toISOString().split('T')[0];
+        const currentDateTime = new Date();
 
         const exams = await Exam.find({
             sem,
             branch,
-            date: today
-        });
+            date: currentDateTime.toISOString().split('T')[0], // Filter by current date
+            startTime: { $gte: currentDateTime } // Filter by exams starting after current time
+        }).populate('scheduledBy', "fname lname");
 
         res.status(200).json({ exams, success: true });
     } catch (error) {
@@ -90,6 +123,7 @@ const getStudentExams = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 
 const getUpcomingExams = async (req, res) => {
@@ -108,7 +142,7 @@ const getUpcomingExams = async (req, res) => {
             sem,
             branch,
             date: { $gte: nextDay }
-        }).sort({ date: 1 });
+        }).sort({ date: 1 }).populate('scheduledBy', "fname lname");
 
         res.status(200).json({ exams: upcomingExams, success: true });
     } catch (error) {
@@ -124,14 +158,37 @@ const getInstructorExam = async (req, res) => {
         const instructor = await User.findOne({ email: req.user.email });
         const exams = await Exam.find({ scheduledBy: instructor._id });
 
-        res.status(200).json({ exams, success: true });
+        return res.status(200).json({ exams, success: true });
     }
     catch (error) {
         console.log(error);
-        res.status(500).json({ error, message: 'Internal Server Error' });
+        return res.status(500).json({ error, message: 'Internal Server Error' });
     }
 
 }
+
+const getOngoingExam = async (req,res) => {
+    try {
+        const instructor = await User.findOne({ email: req.user.email });
+        const exams = await Exam.find({ scheduledBy: instructor._id });
+
+        const currentTime = new Date();
+        for (const exam of exams) {
+            const startTime = new Date(exam.startTime);
+            const endTime = new Date(exam.endTime);
+            if (currentTime >= startTime && currentTime <= endTime) {
+                return res.status(200).json({ exam, success: true });
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error, message: 'Internal Server Error' });
+
+    }
+
+};
+
+
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -143,4 +200,4 @@ const storage = multer.diskStorage({
 });
 
 
-module.exports = { uploadExam, storage, getStudentExams, getInstructorExam, getUpcomingExams };
+module.exports = { uploadExam, storage, getStudentExams, getInstructorExam, getUpcomingExams, getOngoingExam, getStudentOngoing, deleteExam};

@@ -103,7 +103,7 @@ const ViewPapers = () => {
             ? ''
             : allPaper.map((data) => (
                 <div
-                  className="p-2 mx-[6rem] my-4 cursor-pointer transform transition-transform hover:scale-125 "
+                  className="p-2 mx-[6rem] my-4 cursor-pointer transform transition-transform hover:scale-125"
                   key={data._id}
                   onClick={() => showPdf(data.filename)}
                 >

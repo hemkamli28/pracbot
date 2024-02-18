@@ -63,9 +63,9 @@ const UploadExam = () => {
   };
 
   return (
-    <div className="App">
+    <div className="App ">
       <h2 className='my-[2rem] font-bold text-2xl md:text-[1.75rem] text-gray-800'>Schedule a exam</h2>
-      <form className="formStyle" onSubmit={submitImage}>
+      <form className="formStyle px-[3.5rem] mb-2" onSubmit={submitImage}>
         <input className=' mb-3 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:border-indigo-200 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" />
         <select
           className="mb-3 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:border-indigo-200 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
@@ -135,7 +135,7 @@ const UploadExam = () => {
         />
         <br />
         <div className='flex '>
-          <button type="submit" className="w-full mt-4 bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-800">Schedule Exam</button>
+          <button type="submit" className="w-full mb-2 bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-800">Schedule Exam</button>
         </div>
       </form>
     </div>

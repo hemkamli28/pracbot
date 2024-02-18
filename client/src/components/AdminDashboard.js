@@ -29,7 +29,7 @@ const AdminDashboard = () => {
           </div>
         </div>
         <div className="">
-          <div className="md:bg-white md:w-[91.5%] w-full  lg:ml-[4rem] p-5">
+          <div className="md:bg-white md:w-[91.5%] w-full  lg:ml-[4rem] p-5 shadow-md">
             <UserDataTable />
           </div>
         </div>

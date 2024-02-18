@@ -11,7 +11,6 @@ router.post("/upload/:examId", upload.single("file"), authUser , authRole('stude
 router.get("/getall", authUser, authRole('instructor'), getSolutions);
 router.get("/getbyexam/:examId", authUser, authRole('instructor'), getSolutionbyExam);
 router.put("/grade/:solutionId", authUser, authRole('instructor'), gradeSolution);
-router.get("/graded/:solutionId", authUser, authRole('instructor'), getGradedSolutions);
 router.get("/grades", authUser, authRole('student'), getStudentsSubmission);
 
 module.exports = router;

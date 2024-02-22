@@ -71,9 +71,9 @@ const uploadExam = async (req, res) => {
     }
 }
 
-const getStudentOngoing = async (req,res) =>{
+const getStudentOngoing = async (req, res) => {
     try {
-        
+
         const student = await User.findOne({ email: req.user.email });
         const exams = await Exam.find({ sem: student.sem, branch: student.branch }).populate("scheduledBy", "fname lname");;
 
@@ -87,19 +87,19 @@ const getStudentOngoing = async (req,res) =>{
         }
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });
-        
+
     }
 }
 
-const deleteExam = (req, res) => {
+const deleteExam = async (req, res) => {
     try {
-        const {examId }= req.params;
-        const deletedExam = Exam.findByIdAndDelete(examId);
+        const { examId } = req.params;
+        const deletedExam =await Exam.findByIdAndDelete(examId);
         res.status(200).json({ deletedExam, success: true });
 
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });
-        
+
     }
 }
 
@@ -167,7 +167,7 @@ const getInstructorExam = async (req, res) => {
 
 }
 
-const getOngoingExam = async (req,res) => {
+const getOngoingExam = async (req, res) => {
     try {
         const instructor = await User.findOne({ email: req.user.email });
         const exams = await Exam.find({ scheduledBy: instructor._id });
@@ -200,4 +200,4 @@ const storage = multer.diskStorage({
 });
 
 
-module.exports = { uploadExam, storage, getStudentExams, getInstructorExam, getUpcomingExams, getOngoingExam, getStudentOngoing, deleteExam};
+module.exports = { uploadExam, storage, getStudentExams, getInstructorExam, getUpcomingExams, getOngoingExam, getStudentOngoing, deleteExam };

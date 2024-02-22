@@ -6,6 +6,7 @@ import AuthContext from "../Context/AuthContext";
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import PdfComp from './PdfComp';
+import swal from 'sweetalert';
 
 function GetInstructorExam() {
     const [exams, setExams] = useState([]);
@@ -41,9 +42,9 @@ function GetInstructorExam() {
                 console.error('Error fetching exams:', error);
             }
         };
-    
+
         fetchData();
-    
+
         setTimeout(() => {
             if (tableRef.current && !dataTableRef.current) {
                 // Initialize DataTable only if it hasn't been initialized yet
@@ -75,7 +76,7 @@ function GetInstructorExam() {
                 }
             };
         }, 1000);
-    
+
     }, [accessToken, exams]);
     const showPdf = (pdf) => {
         setPdfFile(`http://localhost:5000/uploads/${pdf}`);
@@ -90,6 +91,28 @@ function GetInstructorExam() {
         setPdfFile(null);
         setSelectedSolution(null);
     };
+
+    const handleDelete = async (examId) => {
+        try {
+            const headers = {
+                Authorization: `Bearer ${accessToken}`,
+            };
+            await axios.delete(
+                `${process.env.REACT_APP_SERVERURL}/exam/delete/${examId}`,
+                { headers }
+            );
+            setExams(exams.filter(exam => exam._id !== examId));
+            swal("Deleted!", "Exam has been deleted!", "success");
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            swal({
+                title: "Failed!",
+                text: "Failed to delete user!",
+                icon: "error",
+                button: "Ok",
+            });
+        }
+    }
     return (
         <div className="overflow-x-auto  md:mr-[0rem] mr-0">
             <table ref={tableRef} className="table-auto w-full border border-gray-300">
@@ -122,8 +145,8 @@ function GetInstructorExam() {
                                 <button type="submit" className="bg-[#575f66] text-white py-2 px-4 rounded-md hover:bg-[#394046] ">
                                     <Link to={`/exams/${exam._id}/solutions`}>Solutions</Link>
                                 </button>
-                               
-                                <button type="submit" className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-800 ">
+
+                                <button type="submit" className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-800 " onClick={() => handleDelete(exam._id)}>
                                     Delete
                                 </button>
                             </td>

@@ -12,7 +12,7 @@ router.get("/getforstudents", authUser, authRole('student'), getStudentExams);
 router.get("/getupcoming", authUser, authRole('student'), getUpcomingExams);
 router.get("/getforinstructors", authUser, authRole('instructor'), getInstructorExam);
 router.get("/getOngoing", authUser, authRole('instructor'), getOngoingExam);
-router.get("/delete/:examId", authUser, authRole('instructor'), deleteExam);
+router.delete("/delete/:examId", authUser, authRole('instructor'), deleteExam);
 router.get("/getStudentOngoing", authUser, authRole('student'), getStudentOngoing);
 
 module.exports = router;

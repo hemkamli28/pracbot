@@ -4,6 +4,7 @@ import 'datatables.net-dt/css/jquery.dataTables.css'; // Import DataTables CSS f
 import $ from 'jquery';
 import AuthContext from "../Context/AuthContext";
 import axios from 'axios';
+import swal from 'sweetalert';
 
 function UserDataTable() {
     const [users, setUsers] = useState([]);
@@ -63,6 +64,55 @@ function UserDataTable() {
 
     }, []);
 
+    const handleDelete = async (userId) => {
+        try {
+            const headers = {
+                Authorization: `Bearer ${accessToken}`,
+            };
+            await axios.delete(
+                `${process.env.REACT_APP_SERVERURL}/user/delete/${userId}`,
+                { headers }
+            );
+            // Remove the user from the state
+            setUsers(users.filter(user => user._id !== userId));
+            swal("Deleted!", "Your imaginary file has been deleted!", "success");
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            swal({
+                title: "Failed!",
+                text: "Failed to delete user!", 
+                icon: "error",
+                button: "Ok",
+              });
+        }
+    };
+
+    const handleUpdate = async (userId, updatedUser) => {
+        try {
+            const headers = {
+                Authorization: `Bearer ${accessToken}`,
+            };
+            const response = await axios.put(
+                `${process.env.REACT_APP_SERVERURL}/user/update/${userId}`,
+                updatedUser,
+                { headers }
+            );
+            const updatedUsers = users.map(user =>
+                user._id === userId ? response.data.user : user
+            );
+            setUsers(updatedUsers);
+          
+        } catch (error) {
+            swal({
+                title: "Failed!",
+                text: "Failed to update user!", 
+                icon: "error",
+                button: "Ok",
+              });
+            console.error('Error updating user:', error);
+        }
+    };
+
     // Reinitialize DataTable whenever users change
 
     return (
@@ -79,15 +129,42 @@ function UserDataTable() {
                 <tbody>
                     {users.map((user, index) => (
                         <tr key={user._id} >
-                            <td className="border px-4 py-2 border-gray-300">{user.fname}</td>
-                            <td className="border px-4 py-2 border-gray-300">{user.lname}</td>
-                            <td className="border px-4 py-2 border-gray-300">{user.email}</td>
                             <td className="border px-4 py-2 border-gray-300">
-                                <button type="submit" className="bg-[#dc3545] text-white py-2 px-4 rounded-md hover:bg-[#b12929] mr-2">
-                                Delete
+                                <input
+                                    type="text"
+                                    value={user.fname}
+                                    onChange={e => {
+                                        const updatedUser = { ...user, fname: e.target.value };
+                                        handleUpdate(user._id, updatedUser);
+                                    }}
+                                />
+                            </td>
+                            <td className="border px-4 py-2 border-gray-300">
+                                <input
+                                    type="text"
+                                    value={user.lname}
+                                    onChange={e => {
+                                        const updatedUser = { ...user, lname: e.target.value };
+                                        handleUpdate(user._id, updatedUser);
+                                    }}
+                                />
+                            </td>
+                            <td className="border px-4 py-2 border-gray-300">
+                                <input
+                                    type="text"
+                                    value={user.email}
+                                    onChange={e => {
+                                        const updatedUser = { ...user, email: e.target.value };
+                                        handleUpdate(user._id, updatedUser);
+                                    }}
+                                />
+                            </td>
+                            <td className="border px-4 py-2 border-gray-300 flex justify-center">
+                                <button type="button" className="bg-[#dc3545] text-white py-2 px-4 rounded-md hover:bg-[#b12929] mr-2" onClick={() => handleDelete(user._id)}>
+                                    Delete
                                 </button>
-                                <button type="submit" className="bg-[#f1c02d] text-white py-2 px-4 rounded-md hover:bg-[#ffcc33] ml-2">
-                                Update
+                                <button type="button" className="bg-[#f1c02d] text-white py-2 px-4 rounded-md hover:bg-[#ffcc33] ml-2" onClick={() => handleUpdate(user._id, user)}>
+                                    Update
                                 </button>
                             </td>
                         </tr>

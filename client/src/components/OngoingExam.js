@@ -12,10 +12,12 @@ const OngoingExam = ({ exam }) => {
         return date.toLocaleDateString('en-GB');
     };
 
+
+
     return (
         <div className="border mt-1 border-gray-300 shadow-md mb-4 bg-white">
             <div className="">
-      <h2 className=' font-bold text-2xl md:text-[1.75rem] text-gray-800  border-gray-300 border-b-2 px-[2rem] p-3'>Ongoing exam</h2>
+                <h2 className=' font-bold text-2xl md:text-[1.75rem] text-gray-800  border-gray-300 border-b-2 px-[2rem] p-3'>Ongoing exam</h2>
 
                 <div className='p-[3rem]'>
                     <PdfThumbnail pdfFile={`http://localhost:5000/uploads/${exam.filename}`} />
@@ -27,9 +29,9 @@ const OngoingExam = ({ exam }) => {
                     <p><span className="font-semibold">Subject: </span>{exam.subject}</p>
                     <p><span className="font-semibold">Start Time: </span>{formatTime(exam.startTime)}</p>
                     <p><span className="font-semibold">End Time: </span> {formatTime(exam.endTime)}</p>
-                    <button type="submit" className="bg-red-600 text-white my-3 py-2 px-4 rounded-md hover:bg-red-800 w-full">
+                    {/* <button type="submit" className="bg-red-600 text-white my-3 py-2 px-4 rounded-md hover:bg-red-800 w-full">
                         Delete
-                    </button>
+                    </button> */}
                 </div>
 
             </div>

@@ -103,5 +103,51 @@ const checkUser = async (req,res)=>{
     return res.status(500).json({ error: error, success: false });
   }
 }
+const updateUser = async (req, res) => {
+  const { userId } = req.params; 
+  const updatedUser = req.body; 
 
-module.exports = { getUsers, registerUsers, loginUser,checkRole, checkUser }
+  try {
+      const user = await User.findByIdAndUpdate(userId, updatedUser, { new: true });
+      if (!user) {
+          return res.status(404).json({ message: "User not found" });
+      }
+      res.json({ user });
+  } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+
+      const user = await User.findByIdAndDelete(userId);
+      if (!user) {
+          return res.status(404).json({ message: "User not found" });
+      }
+      return res.json({ message: "User deleted successfully" });
+  } catch (error) {
+      console.error("Error deleting user:", error);
+      return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const countUsers = async (req, res) => {
+  try {
+    const instructorsCount = await User.countDocuments({ role: 'instructor' });
+    const studentsCount = await User.countDocuments({ role: 'student' });
+    const totalCount = await User.countDocuments() - 1 ;
+ 
+    return res.json({ instructorsCount, studentsCount, totalCount});
+} catch (error) {
+    console.error( error);
+    return res.status(500).json({ message: "Internal server error" });
+
+}F
+}
+
+
+module.exports = { getUsers, registerUsers, loginUser,checkRole, checkUser,deleteUser,updateUser,countUsers }

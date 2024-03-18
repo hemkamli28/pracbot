@@ -75,7 +75,7 @@ function UserDataTable() {
             );
             // Remove the user from the state
             setUsers(users.filter(user => user._id !== userId));
-            swal("Deleted!", "Your imaginary file has been deleted!", "success");
+            swal("Deleted!", "User has been deleted!", "success");
         } catch (error) {
             console.error('Error deleting user:', error);
             swal({

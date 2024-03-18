@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import swal from "sweetalert";
 const UploadPaper = () => {
   const [year, setYear] = useState("");
   const [subject, setSubject] = useState("");
@@ -22,14 +23,24 @@ const UploadPaper = () => {
         }
       );
       console.log(result);
-      alert("Uploaded Successfully!!!");
+      swal({
+        title: "Successfull",
+        text: "Paper Uploaded Successfully!", 
+        icon: "success",
+        button: "Ok",
+      });
       setYear("");
       setSubject("");
       setBranch("");
       setFile("");
     } catch (e) {
       console.log(e);
-      alert("Failed!");
+      swal({
+        title: "Failed!",
+        text: "Failed to Upload Paper!", 
+        icon: "error",
+        button: "Ok",
+      });
     }
   };
   return (

@@ -57,7 +57,12 @@ const UploadExam = () => {
     catch (e) {
       console.log(e);
       alert("Failed!!!");
-
+      swal({
+        title: "Failed!",
+        text: "Failed to schedule exam!", 
+        icon: "error",
+        button: "Ok",
+      });
 
     }
   };

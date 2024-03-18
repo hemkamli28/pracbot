@@ -6,11 +6,13 @@ import Navbar from './components/Navbar';
 import PrivateRoute from './components/PrivateRoute';
 import StudentDashboard from './components/StudentDashboard';
 import ViewPapers from './components/ViewPapers';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import AuthProvider from './Context/AuthProvider';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import GetSolutions from './components/GetSolutions';
+import { useEffect } from 'react';
 function App() {
+ 
   return (
     <>
       <GoogleOAuthProvider clientId="729680220811-ikh30vg95j4710spbisa0qhbm540mmov.apps.googleusercontent.com">

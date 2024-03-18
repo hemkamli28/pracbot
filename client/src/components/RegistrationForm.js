@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
 import AuthContext from "../Context/AuthContext";
+import swal from "sweetalert";
 
 const RegistrationForm = () => {
   const { accessToken } = useContext(AuthContext);
@@ -39,7 +40,12 @@ const RegistrationForm = () => {
       );
 
       console.log(response.data);
-      alert("Registration successfull!");
+      swal({
+        title: "Successfull",
+        text: "User added Successfully!", 
+        icon: "success",
+        button: "Ok",
+      });
       setFormData({
         fname: "",
         lname: "",
@@ -52,7 +58,12 @@ const RegistrationForm = () => {
       });
     } catch (error) {
       console.error(error);
-      alert("Failed!");
+      swal({
+        title: "Failed!",
+        text: "Failed to add User!", 
+        icon: "error",
+        button: "Ok",
+      });
     }
   };
 

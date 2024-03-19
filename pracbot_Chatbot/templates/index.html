@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PracBOT</title>
     <style>
+        /* CSS styles */
         body {
             border: 1px solid gray;
             font-family: Arial, sans-serif;
@@ -95,14 +96,14 @@
 <body>
     <div class="title">PracBOT</div>
     <div class="parent-component">
-        <div class="chat-container">
+        <div class="chat-container" id="chat-container">
             <div class="chat-box" id="chat-box">
-                <div class="message bot-message">Hello! Welcome</div>
+                <div class="message bot-message">Welcome to PracBOT! How can I assist you with ?<br><br> check score <br> check scheduled exam <br> download pdf</div>
             </div>
         </div>
     </div>
     <form class="inputForm" id="user-input" onsubmit="sendMessage(); return false;">
-        <input type="text" id="user-message" placeholder="Type subject or enrollment..." style="margin-right: 10px;">
+        <input type="text" id="user-message" placeholder="Type your message...">
         <button type="submit">Send</button>
     </form>
 
@@ -118,56 +119,73 @@
             // Append user's message to the chat box
             var userMessageElement = document.createElement("div");
             userMessageElement.className = "message user-message";
-            userMessageElement.textContent = userMessage;
+            userMessageElement.textContent = "You: " + userMessage;
             chatBox.appendChild(userMessageElement);
 
-            // Check if enrollment is set
-            if (enrollment) {
-                // If enrollment is set, send request to get the grade
+            // Check if user's message is a greeting
+            if (isGreeting(userMessage)) {
+                var botMessageElement = document.createElement("div");
+                botMessageElement.className = "message bot-message";
+                botMessageElement.textContent = " How can I assist you?";
+                chatBox.appendChild(botMessageElement);
+            } else if (userMessage.toLowerCase() === "check score") {
+                var botMessageElement = document.createElement("div");
+                botMessageElement.className = "message bot-message";
+                botMessageElement.textContent = "Please enter the subject.";
+                chatBox.appendChild(botMessageElement);
+                // Set the state to prompt for subject
+                subject = "pending";
+            } else if (subject === "pending") {
+                // If subject is pending, store the subject and ask for enrollment
+                subject = userMessage;
+                var botMessageElement = document.createElement("div");
+                botMessageElement.className = "message bot-message";
+                botMessageElement.textContent = "Please enter the enrollment number.";
+                chatBox.appendChild(botMessageElement);
+                // Set the state to prompt for enrollment
+                enrollment = "pending";
+            } else if (enrollment === "pending") {
+                // If enrollment is pending, store the enrollment and fetch the grade
+                enrollment = userMessage;
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", "/get_data", true);
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState === 4 && xhr.status === 200) {
                         var responseData = JSON.parse(xhr.responseText);
-                        var responseMessage = "";
-                        if (responseData.error) {
-                            responseMessage = responseData.error;
-                        } else {
-                            responseMessage = responseData.message;
-                        }
+                        var responseMessage = responseData.message;
                         var botMessageElement = document.createElement("div");
                         botMessageElement.className = "message bot-message";
-                        botMessageElement.textContent = responseMessage;
+                        botMessageElement.textContent =   responseMessage;
                         chatBox.appendChild(botMessageElement);
-                        chatBox.scrollTop = chatBox.scrollHeight;
                     }
                 };
                 xhr.send("data_type=subject_enrollment_response&subject=" + subject + "&enrollment=" + enrollment);
                 // Reset subject and enrollment
                 subject = "";
                 enrollment = "";
-            } else if (userMessage.toLowerCase() === "check score") {
-                // If user wants to check score, ask for subject
-                var botMessageElement = document.createElement("div");
-                botMessageElement.className = "message bot-message";
-                botMessageElement.textContent = "Please enter the subject.";
-                chatBox.appendChild(botMessageElement);
-                chatBox.scrollTop = chatBox.scrollHeight;
-            } else if (!subject) {
-                // If subject is not set, set it to user input
-                subject = userMessage;
-                // Ask for enrollment
-                var botMessageElement = document.createElement("div");
-                botMessageElement.className = "message bot-message";
-                botMessageElement.textContent = "Please enter the enrollment.";
-                chatBox.appendChild(botMessageElement);
-                chatBox.scrollTop = chatBox.scrollHeight;
             } else {
-                // If subject is set and enrollment is not, set enrollment to user input
-                enrollment = userMessage;
+                // Handle other messages here
+                // For now, let's just echo the user's message
+                var botMessageElement = document.createElement("div");
+                botMessageElement.className = "message bot-message";
+                botMessageElement.textContent = " I'm sorry, I didn't understand that.";
+                chatBox.appendChild(botMessageElement);
             }
+
+            // Scroll to the bottom of the chat box
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Clear input field
             document.getElementById("user-message").value = "";
+        }
+
+        function isGreeting(message) {
+            // List of common greetings
+            var greetings = ["hi", "hey", "hello"];
+
+            // Check if the message is a greeting
+            return greetings.includes(message.toLowerCase());
         }
     </script>
 </body>

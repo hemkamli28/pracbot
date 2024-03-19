@@ -2,6 +2,11 @@ import pymongo
 from bson import ObjectId
 from flask import Flask, request, jsonify, render_template, send_file
 import shutil
+import nltk
+from nltk.tokenize import word_tokenize
+
+# Initialize Flask app
+app = Flask(__name__)
 
 # MongoDB connection details
 DATABASE_URL = "mongodb+srv://hemkamli425:WhrsGjX8TBqmSI6g@cluster0.t3gtalu.mongodb.net/"
@@ -10,9 +15,6 @@ USER_COLLECTION_NAME = "users"
 PDF_COLLECTION_NAME = "paper"
 EXAM_COLLECTION_NAME = "exams"
 SOLUTION_COLLECTION_NAME = "solutions"
-
-# Initialize Flask app
-app = Flask(__name__)
 
 # Connect to MongoDB
 try:
@@ -59,31 +61,22 @@ def get_data():
         return jsonify({"error": "Invalid data type."})
 
 def fetch_grade(subject, enrollment):
-    # Find the exam document based on the subject\ print("Subject:", subject)
-    print("Enrollment:", enrollment)
-    print("Subject:", subject)
-
-    # Find the user document based on the enrollment number
-    
+    # Find the exam document based on the subject
     exam_document = exam_collection.find_one({"subject": subject})
-    print("Exam Document:", exam_document)
     if not exam_document:
         return "Exam not found for this subject."
 
     # Find the user document based on the enrollment number
     user_document = user_collection.find_one({"enrollment": enrollment})
-    print("User Document:", user_document)
     if not user_document:
         return "User not found."
-    print("Exam ID:", exam_document['_id'])
-    print("User ID:", user_document['_id']);
+
     # Find the solution document based on the user, exam, and uploadedBy fields
     solution_document = solution_collection.find_one({
         "uploadedBy": user_document["_id"],
         "exam": exam_document["_id"]
     })
-    
-    print("Solution Document:", solution_document)
+
     if solution_document:
         # Extract and return the grade from the solution document
         return solution_document.get("grade", "Grade not available.")

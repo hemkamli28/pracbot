@@ -19,42 +19,56 @@ const GetStudentsExam = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
+ 
+
         const headers = {
           Authorization: `Bearer ${accessToken}`,
         };
 
         // Fetch ongoing exam
-        const ongoingResponse = await axios.get(
-          `${process.env.REACT_APP_SERVERURL}/exam/getStudentOngoing`,
-          { headers }
-        );
-        if (ongoingResponse.data.success) {
-          setOngoingExam(ongoingResponse.data.exam);
-        }
+        try {
+          console.log(`1st`);
+          const ongoingResponse = await axios.get(
+            `${process.env.REACT_APP_SERVERURL}/exam/getStudentOngoing`,
+            { headers }
+          );
+          if (ongoingResponse.data.success) {
+            setOngoingExam(ongoingResponse.data.exam);
+          }
+        } catch (error) {
+          console.log(error);
+          
+        } try {
+          console.log(`2st`);
 
-        // Fetch today's exams
-        const todayResponse = await axios.get(
-          `${process.env.REACT_APP_SERVERURL}/exam/getforstudents`,
-          { headers }
-        );
-        if (todayResponse.data.success) {
-          setAllExams(todayResponse.data.exams);
-        }
+          const todayResponse = await axios.get(
+            `${process.env.REACT_APP_SERVERURL}/exam/getforstudents`,
+            { headers }
+          );
+          if (todayResponse.data.success) {
+            setAllExams(todayResponse.data.exams);
+          }
+        } catch (error) {
+          console.log(error);
+          
+        } try {  
+          console.log(`3st`);
 
-        // Fetch upcoming exams
-        const upcomingResponse = await axios.get(
+          const upcomingResponse = await axios.get(
           `${process.env.REACT_APP_SERVERURL}/exam/getupcoming`,
           { headers }
         );
         if (upcomingResponse.data.success) {
           setAllExams(prevExams => [...prevExams, ...upcomingResponse.data.exams]);
         }
-      } catch (error) {
-        console.error("Error fetching exams:", error);
+          
+        } catch (error) {
+          console.log(error);
+          
+        }
+        
       }
-    };
-
+     
     fetchData();
   }, []);
 

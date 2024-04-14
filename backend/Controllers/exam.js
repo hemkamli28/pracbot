@@ -73,24 +73,28 @@ const uploadExam = async (req, res) => {
 
 const getStudentOngoing = async (req, res) => {
     try {
-
         const student = await User.findOne({ email: req.user.email });
-        const exams = await Exam.find({ sem: student.sem, branch: student.branch }).populate("scheduledBy", "fname lname");;
-
+        const exams = await Exam.find({ sem: student.sem, branch: student.branch }).populate("scheduledBy", "fname lname");
+        
         const currentTime = new Date();
         for (const exam of exams) {
             const startTime = new Date(exam.startTime);
             const endTime = new Date(exam.endTime);
+            console.log('Current Time:', currentTime);
+            console.log('Start Time:', startTime);
+            console.log('End Time:', endTime);
             if (currentTime >= startTime && currentTime <= endTime) {
+                console.log('Exam found:', exam);
                 return res.status(200).json({ exam, success: true });
             }
         }
+        console.log('No ongoing exams found');
+        return res.status(404).json({ success: false });
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
-
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
-
 const deleteExam = async (req, res) => {
     try {
         const { examId } = req.params;

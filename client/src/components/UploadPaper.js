@@ -16,7 +16,7 @@ const UploadPaper = () => {
     console.log(subject, year, branch, file);
     try {
       const result = await axios.post(
-        "http://localhost:5000/paper/upload",
+        `${process.env.REACT_APP_SERVERURL}/paper/upload`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

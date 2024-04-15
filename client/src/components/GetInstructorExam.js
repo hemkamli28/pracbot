@@ -79,7 +79,7 @@ function GetInstructorExam() {
 
     }, [accessToken, exams]);
     const showPdf = (pdf) => {
-        setPdfFile(`http://localhost:5000/uploads/${pdf}`);
+        setPdfFile(`{}/uploads/${pdf}`);
     };
 
     const handleViewSolution = (solution) => {

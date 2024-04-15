@@ -20,7 +20,7 @@ const OngoingExam = ({ exam }) => {
                 <h2 className=' font-bold text-2xl md:text-[1.75rem] text-gray-800  border-gray-300 border-b-2 px-[2rem] p-3'>Ongoing exam</h2>
 
                 <div className='p-[3rem]'>
-                    <PdfThumbnail pdfFile={`http://localhost:5000/uploads/${exam.filename}`} />
+                    <PdfThumbnail pdfFile={`${process.env.REACT_APP_SERVERURL}/uploads/${exam.filename}`} />
 
                 </div>
                 <div className='px-[3rem] pb-[2rem] flex flex-col justify-center'>

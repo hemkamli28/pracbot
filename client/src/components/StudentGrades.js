@@ -75,7 +75,7 @@ function StudentGrades() {
     }, [accessToken, solutions]);
 
     const showPdf = (pdf) => {
-        setPdfFile(`http://localhost:5000/uploads/${pdf}`);
+        setPdfFile(`${process.env.REACT_APP_SERVERURL}/uploads/${pdf}`);
     };
 
     const handleViewSolution = (solution) => {

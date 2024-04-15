@@ -28,7 +28,7 @@ const UploadExam = () => {
     formData.append("endTime", endTime); // Appending endTime to formData
     try {
       const result = await axios.post(
-        "http://localhost:5000/exam/upload",
+        `${process.env.REACT_APP_SERVERURL}/exam/upload`,
         formData,
         {
           headers: {

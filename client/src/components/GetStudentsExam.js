@@ -105,7 +105,7 @@ const GetStudentsExam = () => {
   };
 
   const showPdf = (pdf) => {
-    setPdfFile(`http://localhost:5000/uploads/${pdf}`);
+    setPdfFile(`${process.env.REACT_APP_SERVERURL}/uploads/${pdf}`);
   };
 
 
@@ -135,7 +135,7 @@ const GetStudentsExam = () => {
             <div className="bg-indigo-200 p-4 rounded-md shadow-md cursor-pointer mb-4">
               <div className="flex flex-wrap justify-around items-center">
                 <div onClick={() => showPdf(ongoingExam.filename)}>
-                  <PdfThumbnail pdfFile={`http://localhost:5000/uploads/${ongoingExam.filename}`} />
+                  <PdfThumbnail pdfFile={`${process.env.REACT_APP_SERVERURL}/uploads/${ongoingExam.filename}`} />
                 </div>
                 <div>
                   <p className="font-bold">Exam: <span className="font-light">{ongoingExam.name}</span></p>

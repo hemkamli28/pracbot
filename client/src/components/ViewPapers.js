@@ -21,7 +21,7 @@ const ViewPapers = () => {
 
   const getPdf = async () => {
     try {
-      const result = await axios.get('http://localhost:5000/paper/all');
+      const result = await axios.get(`${process.env.REACT_APP_SERVERURL}/paper/all`);
       console.log(result.data.papers);
       setAllPapers(result.data.papers);
     } catch (error) {
@@ -30,7 +30,7 @@ const ViewPapers = () => {
   };
 
   const showPdf = (pdf) => {
-    setPdfFile(`http://localhost:5000/uploads/${pdf}`);
+    setPdfFile(`${process.env.REACT_APP_SERVERURL}/uploads/${pdf}`);
   };
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const ViewPapers = () => {
     const handleFilterSubmit = async () => {
       try {
         const result = await axios.get(
-          `http://localhost:5000/paper/filter?branch=${filter.branch}&subject=${filter.subject}&year=${filter.year}&filename=${filter.filename}`
+          `${process.env.REACT_APP_SERVERURL}/paper/filter?branch=${filter.branch}&subject=${filter.subject}&year=${filter.year}&filename=${filter.filename}`
         );
         console.log(result.data.papers);
         setAllPapers(result.data.papers);
@@ -107,7 +107,7 @@ const ViewPapers = () => {
                   key={data._id}
                   onClick={() => showPdf(data.filename)}
                 >
-                  <PdfThumbnail pdfFile={`http://localhost:5000/uploads/${data.filename}`} />
+                  <PdfThumbnail pdfFile={`${process.env.REACT_APP_SERVERURL}/uploads/${data.filename}`} />
                   <h6>{data.filename.slice(0, data.filename.indexOf('.pdf'))} - {data.year}</h6>
                 </div>
               ))}

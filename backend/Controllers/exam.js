@@ -128,27 +128,27 @@ const getStudentExams = async (req, res) => {
     }
 };
 
-
+    
 
 const getUpcomingExams = async (req, res) => {
     try {
-        const student = await User.findOne({ email: req.user.email });
-        const { sem, branch } = student;
+            const student = await User.findOne({ email: req.user.email });
+            const { sem, branch } = student;
 
-        // Get today's date
-        const today = new Date().toISOString().split('T')[0];
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const nextDay = tomorrow.toISOString().split('T')[0];
+            // Get today's date
+            const today = new Date().toISOString().split('T')[0];
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const nextDay = tomorrow.toISOString().split('T')[0];
 
-        // Find exams scheduled for the future (after today)
-        const upcomingExams = await Exam.find({
-            sem,
-            branch,
-            date: { $gte: nextDay }
-        }).sort({ date: 1 }).populate('scheduledBy', "fname lname");
+            // Find exams scheduled for the future (after today)
+            const upcomingExams = await Exam.find({
+                sem,
+                branch,
+                date: { $gte: nextDay }
+            }).sort({ date: 1 }).populate('scheduledBy', "fname lname");
 
-        res.status(200).json({ exams: upcomingExams, success: true });
+            res.status(200).json({ exams: upcomingExams, success: true });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });

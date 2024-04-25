@@ -2,6 +2,7 @@ import pymongo
 from bson import ObjectId
 from flask import Flask, request, jsonify, render_template, send_file
 import shutil
+from datetime import datetime
 
 # MongoDB connection details
 DATABASE_URL = "mongodb+srv://hemkamli425:WhrsGjX8TBqmSI6g@cluster0.t3gtalu.mongodb.net/"
@@ -55,6 +56,17 @@ def get_data():
         # Fetch the grade using subject and enrollment
         grade = fetch_grade(subject, enrollment)
         return jsonify({"message": grade})
+    elif data_type == "sem_branch_response":
+        sem = request.form.get("sem")
+        branch= request.form.get("branch")
+        # Call get_student_exams function to get exam information
+        exam_info = get_student_exams(sem, branch)
+        if isinstance(exam_info, list):
+            # If exams are found, return the list of exam information
+            return jsonify({"exams": exam_info})
+        else:
+            # If no exams are found, return the message
+            return jsonify({"message": exam_info})
     else:
         return jsonify({"error": "Invalid data type."})
 
@@ -133,6 +145,36 @@ def download_pdf():
             return jsonify({"error": f"Error downloading PDF: {e}"})
     else:
         return jsonify({"error": "PDF not found in the database."})
+    
+
+from datetime import datetime
+
+def get_student_exams(sem, branch):
+    print("semester:", sem)
+    print("Branch:", branch)
+    
+    exam_documents = exam_collection.find({"sem": sem, "branch": branch})
+    print("Exam Documents:", exam_documents)
+    
+    exams_info = []
+    today = datetime.now().date()  # Get today's date
+    
+    for exam_document in exam_documents:
+        date_str = exam_document.get("date")  # Get the date string from the document
+        if date_str:
+            # Convert the date string to a datetime object
+            exam_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+            if exam_date > today:
+                subject = exam_document.get("subject", "Subject not available")
+                exams_info.append({"date": date_str, "subject": subject})
+    
+    if exams_info:
+        for exam in exams_info:
+            print("Date:", exam["date"])
+            print("Subject:", exam["subject"])
+        return exams_info
+    else:
+        return "No upcoming exams found for the specified semester and branch."
 
 
 if __name__ == "__main__":

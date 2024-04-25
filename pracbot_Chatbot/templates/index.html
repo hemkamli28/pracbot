@@ -164,7 +164,57 @@
                 // Reset subject and enrollment
                 subject = "";
                 enrollment = "";
+            } else if (userMessage.toLowerCase() === "check scheduled exam") { 
+                var botMessageElement = document.createElement("div");
+                botMessageElement.className = "message bot-message";
+                botMessageElement.textContent = "Please enter the semsester.";
+                chatBox.appendChild(botMessageElement);
+                // Set the state to prompt for subject
+                sem = "pending";
+            } else if (sem === "pending") {
+                // If subject is pending, store the subject and ask for enrollment
+                sem = userMessage;
+                var botMessageElement = document.createElement("div");
+                botMessageElement.className = "message bot-message";
+                botMessageElement.textContent = "Please enter the Branch.";
+                chatBox.appendChild(botMessageElement);
+                // Set the state to prompt for enrollment
+                branch = "pending";
+            } else if (branch === "pending") {
+                // If enrollment is pending, store the enrollment and fetch the grade
+                branch = userMessage;
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/get_data", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var responseData = JSON.parse(xhr.responseText);
+            var exams = responseData.exams;
+            if (exams && exams.length > 0) {
+                // Display each exam information
+                for (var i = 0; i < exams.length; i++) {
+                    var exam = exams[i];
+                    var examMessage = "Date: " + exam.date + ", Subject: " + exam.subject;
+                    var botMessageElement = document.createElement("div");
+                    botMessageElement.className = "message bot-message";
+                    botMessageElement.textContent = examMessage;
+                    chatBox.appendChild(botMessageElement);
+                }
             } else {
+                // No exams found
+                var botMessageElement = document.createElement("div");
+                botMessageElement.className = "message bot-message";
+                botMessageElement.textContent = "No upcoming exams found for the specified semester and branch.";
+                chatBox.appendChild(botMessageElement);
+            }
+        }
+    };
+                xhr.send("data_type=sem_branch_response&sem=" + sem + "&branch=" + branch);
+                // Reset subject and enrollment
+                sem = "";
+                branch = "";
+            } 
+            else {
                 // Handle other messages here
                 // For now, let's just echo the user's message
                 var botMessageElement = document.createElement("div");

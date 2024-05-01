@@ -222,39 +222,55 @@ def get_student_exams(sem, branch):
     else:
         return "No upcoming exams found for the specified semester and branch."
 
+
 def download_pdf(subjectName):
     # Find PDF documents with the specified subject name
     pdf_documents = pdf_collection.find({"subject": subjectName})
-    print("PDF Documents: ", pdf_documents)
 
     # Check if any PDF documents are found
-    if pdf_documents:
+    if pdf_documents.count() > 0:
         print("Found PDFs")
-        # Create a directory to store downloaded PDFs if it doesn't exist
-        # download_dir = os.path.join(os.getcwd(), "downloads")
-        # if not os.path.exists(download_dir):
-        #     os.makedirs(download_dir)
+        
+        # Get the directory of the current script
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        download_dir = os.path.join(current_dir, "downloads")
+
+        # Create the download directory if it doesn't exist
+        if not os.path.exists(download_dir):
+            os.makedirs(download_dir)
+
+        downloaded_files = []
 
         for pdf_document in pdf_documents:
-            fp = "E:\\Sem 8\\IBM_Project\\PracBot_Proj\\pracbot-main\\backend\\"
-            pdf_file_path = pdf_document.get("path")
-            pdf_file_path = fp + pdf_file_path
-
+            pdf_file_path = pdf_document.get("path")  # Assuming "path" is the key where file paths are stored in MongoDB
             file_name = os.path.basename(pdf_file_path)
-            download_path = "E:\\Sem 8\\IBM_Project\\PracBot_Proj\\pracbot-main\\pracbot_Chatbot\\" + file_name
+            download_path = os.path.join(download_dir, file_name)
 
             try:
                 with open(pdf_file_path, 'rb') as source, open(download_path, 'wb') as dest:
                     shutil.copyfileobj(source, dest)
+                downloaded_files.append(download_path)
             except Exception as e:
                 print("Error:", e)
                 return "Error downloading PDF files for the specified subject name."
 
-        return "PDF files downloaded successfully."
+        if downloaded_files:
+            return downloaded_files  # Return list of downloaded file paths
+        else:
+            return "No PDF files found for the specified subject name."
     else:
         return "No PDF files found for the specified subject name."
 
+# Example usage:
+subject = "Mathematics"
+result = download_pdf(subject)
 
+if isinstance(result, list):
+    for file_path in result:
+        print("Downloaded PDF:", file_path)
+else:
+    print(result)  # Output error or message if download was unsuccessful
+    
 if __name__ == "__main__":
     app.run(debug=True, port=5002)
     

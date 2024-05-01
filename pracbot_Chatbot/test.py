@@ -6,8 +6,6 @@ from Crypto.Cipher import AES
 import base64
 from datetime import datetime
 import os
-import tkinter as tk
-from tkinter import filedialog
 
 # MongoDB connection details
 DATABASE_URL = "mongodb+srv://hemkamli425:WhrsGjX8TBqmSI6g@cluster0.t3gtalu.mongodb.net/"

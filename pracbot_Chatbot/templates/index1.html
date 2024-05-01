@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PracBOT</title>
+    <style>
+        /* CSS styles */
+        body {
+            border: 1px solid gray;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #EBEBEB;
+        }
+        .title {
+            text-align: center;
+            padding: 10px;
+            background-color: #2c4860;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        .parent-component {
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            height: 70vh;
+        }
+        .chat-container {
+            flex: 1;
+            background-color: #EBEBEB;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background-color: transparent;
+        }
+        .message {
+            margin-bottom: 10px;
+            clear: both;
+            overflow-wrap: break-word;
+        }
+        .user-message {
+            float: right;
+            background-color: #2c3e50;
+            color: #fff;
+            border-radius: 10px 10px 0 10px;
+            padding: 10px;
+            max-width: 70%;
+        }
+        .bot-message {
+            float: left;
+            background-color: #2980b9;
+            color: white;
+            border-radius: 10px 10px 10px 0;
+            padding: 10px;
+            max-width: 70%;
+        }
+        input[type="text"] {
+            width: 80%;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+        input[type="submit"] {
+            width: auto;
+            padding: 8px 20px;
+            border: none;
+            background-color: #2c4860;
+            color: #EBEBEB;
+            border-radius: 4px;
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: background-color 0.3s;
+            align-self: flex-end;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .inputForm {
+            display: flex;
+            justify-content: space-between;
+        }
+        button {
+            background-color: #2c3e50;
+            color: white;
+            padding: 0px 17px;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">PracBOT</div>
+    <div class="parent-component">
+        <div class="chat-container" id="chat-container">
+            <div class="chat-box" id="chat-box">
+                <div class="message bot-message">Welcome to PracBOT! How can I assist you with ?<br><br> check score <br> check scheduled exam <br> download pdf</div>
+            </div>
+        </div>
+    </div>
+    <form class="inputForm" id="user-input" onsubmit="sendMessage(); return false;">
+        <input type="text" id="user-message" placeholder="Type your message...">
+        <button type="submit">Send</button>
+    </form>
+
+    <script>
+        // Define global variables to store subject and enrollment
+        var subject = "";
+        var enrollment = "";
+
+        function sendMessage() {
+            var userMessage = document.getElementById("user-message").value;
+            var chatBox = document.getElementById("chat-box");
+
+            // Append user's message to the chat box
+            var userMessageElement = document.createElement("div");
+            userMessageElement.className = "message user-message";
+            userMessageElement.textContent = "You: " + userMessage;
+            chatBox.appendChild(userMessageElement);
+
+            // Check if user's message is a greeting
+            if (isGreeting(userMessage)) {
+                var botMessageElement = document.createElement("div");
+                botMessageElement.className = "message bot-message";
+                botMessageElement.textContent = " How can I assist you?";
+                chatBox.appendChild(botMessageElement);
+            } else if (userMessage.toLowerCase() === "check score") {
+                var botMessageElement = document.createElement("div");
+                botMessageElement.className = "message bot-message";
+                botMessageElement.textContent = "Please enter the subject.";
+                chatBox.appendChild(botMessageElement);
+                // Set the state to prompt for subject
+                subject = "pending";
+            } else if (subject === "pending") {
+                // If subject is pending, store the subject and ask for enrollment
+                subject = userMessage;
+                var botMessageElement = document.createElement("div");
+                botMessageElement.className = "message bot-message";
+                botMessageElement.textContent = "Please enter the enrollment number.";
+                chatBox.appendChild(botMessageElement);
+                // Set the state to prompt for enrollment
+                enrollment = "pending";
+            } else if (enrollment === "pending") {
+                // If enrollment is pending, store the enrollment and fetch the grade
+                enrollment = userMessage;
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/get_data", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var responseData = JSON.parse(xhr.responseText);
+                        var responseMessage = responseData.message;
+                        var botMessageElement = document.createElement("div");
+                        botMessageElement.className = "message bot-message";
+                        botMessageElement.textContent =   responseMessage;
+                        chatBox.appendChild(botMessageElement);
+                    }
+                };
+                xhr.send("data_type=subject_enrollment_response&subject=" + subject + "&enrollment=" + enrollment);
+                // Reset subject and enrollment
+                subject = "";
+                enrollment = "";
+            } else if (userMessage.toLowerCase() === "check scheduled exam") { 
+                var botMessageElement = document.createElement("div");
+                botMessageElement.className = "message bot-message";
+                botMessageElement.textContent = "Please enter the semsester.";
+                chatBox.appendChild(botMessageElement);
+                // Set the state to prompt for subject
+                sem = "pending";
+            } else if (sem === "pending") {
+                // If subject is pending, store the subject and ask for enrollment
+                sem = userMessage;
+                var botMessageElement = document.createElement("div");
+                botMessageElement.className = "message bot-message";
+                botMessageElement.textContent = "Please enter the Branch.";
+                chatBox.appendChild(botMessageElement);
+                // Set the state to prompt for enrollment
+                branch = "pending";
+            } else if (branch === "pending") {
+                // If enrollment is pending, store the enrollment and fetch the grade
+                branch = userMessage;
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/get_data", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var responseData = JSON.parse(xhr.responseText);
+            var exams = responseData.exams;
+            if (exams && exams.length > 0) {
+                // Display each exam information
+                for (var i = 0; i < exams.length; i++) {
+                    var exam = exams[i];
+                    var examMessage = "Date: " + exam.date + ", Subject: " + exam.subject;
+                    var botMessageElement = document.createElement("div");
+                    botMessageElement.className = "message bot-message";
+                    botMessageElement.textContent = examMessage;
+                    chatBox.appendChild(botMessageElement);
+                }
+            } else {
+                // No exams found
+                var botMessageElement = document.createElement("div");
+                botMessageElement.className = "message bot-message";
+                botMessageElement.textContent = "No upcoming exams found for the specified semester and branch.";
+                chatBox.appendChild(botMessageElement);
+            }
+        }
+    };
+                xhr.send("data_type=sem_branch_response&sem=" + sem + "&branch=" + branch);
+                // Reset subject and enrollment
+                sem = "";
+                branch = "";
+            } 
+            else {
+                // Handle other messages here
+                // For now, let's just echo the user's message
+                var botMessageElement = document.createElement("div");
+                botMessageElement.className = "message bot-message";
+                botMessageElement.textContent = " I'm sorry, I didn't understand that.";
+                chatBox.appendChild(botMessageElement);
+            }
+
+            // Scroll to the bottom of the chat box
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Clear input field
+            document.getElementById("user-message").value = "";
+        }
+
+        function isGreeting(message) {
+            // List of common greetings
+            var greetings = ["hi", "hey", "hello"];
+
+            // Check if the message is a greeting
+            return greetings.includes(message.toLowerCase());
+        }
+    </script>
+</body>
+</html>

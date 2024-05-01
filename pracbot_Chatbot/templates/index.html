@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,12 @@
         /* CSS styles */
         body {
             border: 1px solid gray;
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins';
             margin: 0;
             padding: 0;
             background-color: #EBEBEB;
         }
+
         .title {
             text-align: center;
             padding: 10px;
@@ -20,6 +22,7 @@
             color: #fff;
             margin-bottom: 20px;
         }
+
         .parent-component {
             background-color: transparent;
             display: flex;
@@ -27,6 +30,7 @@
             align-items: stretch;
             height: 70vh;
         }
+
         .chat-container {
             flex: 1;
             background-color: #EBEBEB;
@@ -34,17 +38,20 @@
             display: flex;
             flex-direction: column;
         }
+
         .chat-box {
             flex: 1;
             overflow-y: auto;
             padding: 15px;
             background-color: transparent;
         }
+
         .message {
             margin-bottom: 10px;
             clear: both;
             overflow-wrap: break-word;
         }
+
         .user-message {
             float: right;
             background-color: #2c3e50;
@@ -53,6 +60,7 @@
             padding: 10px;
             max-width: 70%;
         }
+
         .bot-message {
             float: left;
             background-color: #2980b9;
@@ -61,12 +69,14 @@
             padding: 10px;
             max-width: 70%;
         }
+
         input[type="text"] {
             width: 80%;
             border: 1px solid #ccc;
             box-sizing: border-box;
             padding: 10px;
         }
+
         input[type="submit"] {
             width: auto;
             padding: 8px 20px;
@@ -79,13 +89,16 @@
             transition: background-color 0.3s;
             align-self: flex-end;
         }
+
         input[type="submit"]:hover {
             background-color: #0056b3;
         }
+
         .inputForm {
             display: flex;
             justify-content: space-between;
         }
+
         button {
             background-color: #2c3e50;
             color: white;
@@ -93,12 +106,21 @@
         }
     </style>
 </head>
+
 <body>
     <div class="title">PracBOT</div>
     <div class="parent-component">
         <div class="chat-container" id="chat-container">
             <div class="chat-box" id="chat-box">
-                <div class="message bot-message">Welcome to PracBOT! How can I assist you with ?<br><br> check score <br> check scheduled exam <br> download pdf</div>
+                <!-- Initial message with typewriter effect -->
+                <script>
+                    window.onload = function () {
+                        var initialMessage = "Welcome to <b>PracBOT!</b> How can I assist you with? <br><br> <a href=\"#\" onclick=\"sendMessage('Check Score')\" style=\"color: white;\">Check Score</a> <br><a href=\"#\" onclick=\"sendMessage('Check Scheduled Exam')\" style=\"color: white;\">Check Scheduled Exam</a> <br><a href=\"#\" onclick=\"sendMessage('Download Previous Year Question Papers')\" style=\"color: white;\">Download Previous Year Question Papers</a>";
+                        var chatBox = document.getElementById("chat-box");
+                        createBotMessageElementWithTypewriter(chatBox, initialMessage);
+                    };
+                </script>
+
             </div>
         </div>
     </div>
@@ -107,13 +129,58 @@
         <button type="submit">Send</button>
     </form>
 
+    <!-- Add the 'crypto-js' library for AES encryption -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+
     <script>
         // Define global variables to store subject and enrollment
         var subject = "";
         var enrollment = "";
+        var sem = "";
+        var branch = "";
+        var subjectForPDF = "";
+        var encryptionKey = "ADEDMoXsv81lpe7x3wl5d1sbhOzmNQbc"; // Set your encryption key here
 
-        function sendMessage() {
-            var userMessage = document.getElementById("user-message").value;
+        // Function to encrypt a message using AES encryption
+        function encryptMessage(message, key) {
+            // Convert key to Uint8Array
+            var keyBuffer = new TextEncoder().encode(key);
+
+            // Generate a random IV
+            var iv = crypto.getRandomValues(new Uint8Array(16));
+
+            return window.crypto.subtle.importKey(
+                "raw",
+                keyBuffer,
+                { name: "AES-CBC" },
+                false,
+                ["encrypt"]
+            ).then(function (key) {
+                return window.crypto.subtle.encrypt(
+                    {
+                        name: "AES-CBC",
+                        iv: iv,
+                    },
+                    key,
+                    new TextEncoder().encode(message)
+                );
+            }).then(function (encrypted) {
+                // Concatenate IV and ciphertext for storage or transmission
+                var encryptedBytes = new Uint8Array(encrypted);
+                var result = new Uint8Array(iv.length + encryptedBytes.length);
+                result.set(iv);
+                result.set(encryptedBytes, iv.length);
+                return result;
+            }).then(function (combined) {
+                // Convert to base64 for transmission
+                return btoa(String.fromCharCode.apply(null, new Uint8Array(combined)));
+            });
+        }
+
+        function sendMessage(message) {
+            var userMessage = message || document.getElementById("user-message").value;
             var chatBox = document.getElementById("chat-box");
 
             // Append user's message to the chat box
@@ -124,110 +191,171 @@
 
             // Check if user's message is a greeting
             if (isGreeting(userMessage)) {
-                var botMessageElement = document.createElement("div");
-                botMessageElement.className = "message bot-message";
-                botMessageElement.textContent = " How can I assist you?";
-                chatBox.appendChild(botMessageElement);
+                var greetingReply = "How can I assist you?";
+                createBotMessageElementWithTypewriter(chatBox, greetingReply);
             } else if (userMessage.toLowerCase() === "check score") {
-                var botMessageElement = document.createElement("div");
-                botMessageElement.className = "message bot-message";
-                botMessageElement.textContent = "Please enter the subject.";
-                chatBox.appendChild(botMessageElement);
+                var enterSubject = "Please enter the subject."
+                createBotMessageElementWithTypewriter(chatBox, enterSubject);
                 // Set the state to prompt for subject
                 subject = "pending";
             } else if (subject === "pending") {
                 // If subject is pending, store the subject and ask for enrollment
                 subject = userMessage;
-                var botMessageElement = document.createElement("div");
-                botMessageElement.className = "message bot-message";
-                botMessageElement.textContent = "Please enter the enrollment number.";
-                chatBox.appendChild(botMessageElement);
+                var enterEnrollment = "Please enter the enrollment number.";
+                createBotMessageElementWithTypewriter(chatBox, enterEnrollment);
                 // Set the state to prompt for enrollment
                 enrollment = "pending";
             } else if (enrollment === "pending") {
                 // If enrollment is pending, store the enrollment and fetch the grade
                 enrollment = userMessage;
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "/get_data", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        var responseData = JSON.parse(xhr.responseText);
-                        var responseMessage = responseData.message;
-                        var botMessageElement = document.createElement("div");
-                        botMessageElement.className = "message bot-message";
-                        botMessageElement.textContent =   responseMessage;
-                        chatBox.appendChild(botMessageElement);
-                    }
-                };
-                xhr.send("data_type=subject_enrollment_response&subject=" + subject + "&enrollment=" + enrollment);
-                // Reset subject and enrollment
-                subject = "";
-                enrollment = "";
-            } else if (userMessage.toLowerCase() === "check scheduled exam") { 
-                var botMessageElement = document.createElement("div");
-                botMessageElement.className = "message bot-message";
-                botMessageElement.textContent = "Please enter the semsester.";
-                chatBox.appendChild(botMessageElement);
+
+                // Encrypt subject and enrollment separately
+                encryptMessage(subject, encryptionKey).then(function (encryptedSubject) {
+                    encryptMessage(enrollment, encryptionKey).then(function (encryptedEnrollment) {
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("POST", "/get_data", true);
+                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        xhr.onreadystatechange = function () {
+                            if (xhr.readyState === 4 && xhr.status === 200) {
+                                var responseData = JSON.parse(xhr.responseText);
+                                var responseMessage = responseData.message;
+                                if (!isNaN(responseMessage)) {
+                                    // Convert responseMessage to a number if it's a string representation of a number
+                                    responseMessage = Number(responseMessage);
+                                    var gradeMsg = "You have scored " + responseMessage + " Marks.";
+                                    createBotMessageElementWithTypewriter(chatBox, gradeMsg);
+                                } else {
+                                    createBotMessageElementWithTypewriter(chatBox, responseMessage);
+                                }
+
+
+                            }
+                        };
+
+                        // Send encrypted data to server
+                        xhr.send("data_type=subject_enrollment_response&subject=" + encodeURIComponent(encryptedSubject) + "&enrollment=" + encodeURIComponent(encryptedEnrollment));
+
+                        // Reset subject and enrollment
+                        subject = "";
+                        enrollment = "";
+                    });
+                });
+            } else if (userMessage.toLowerCase() === "check scheduled exam") {
+                var enterSemester = "Please enter the semester";
+                createBotMessageElementWithTypewriter(chatBox, enterSemester);
+
                 // Set the state to prompt for subject
                 sem = "pending";
             } else if (sem === "pending") {
-                // If subject is pending, store the subject and ask for enrollment
+                // If semester is pending, store the subject and ask for enrollment
                 sem = userMessage;
-                var botMessageElement = document.createElement("div");
-                botMessageElement.className = "message bot-message";
-                botMessageElement.textContent = "Please enter the Branch.";
-                chatBox.appendChild(botMessageElement);
+                // alert(sem)
+                var enterBranch = "Please enter the branch";
+                createBotMessageElementWithTypewriter(chatBox, enterBranch);
                 // Set the state to prompt for enrollment
                 branch = "pending";
             } else if (branch === "pending") {
                 // If enrollment is pending, store the enrollment and fetch the grade
                 branch = userMessage;
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "/get_data", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var responseData = JSON.parse(xhr.responseText);
-            var exams = responseData.exams;
-            if (exams && exams.length > 0) {
-                // Display each exam information
-                for (var i = 0; i < exams.length; i++) {
-                    var exam = exams[i];
-                    var examMessage = "Date: " + exam.date + ", Subject: " + exam.subject;
-                    var botMessageElement = document.createElement("div");
-                    botMessageElement.className = "message bot-message";
-                    botMessageElement.textContent = examMessage;
-                    chatBox.appendChild(botMessageElement);
-                }
-            } else {
-                // No exams found
-                var botMessageElement = document.createElement("div");
-                botMessageElement.className = "message bot-message";
-                botMessageElement.textContent = "No upcoming exams found for the specified semester and branch.";
-                chatBox.appendChild(botMessageElement);
+                // alert(branch)
+                // Encrypt semester and branch separately
+                encryptMessage(sem, encryptionKey).then(function (encryptedSem) {
+                    encryptMessage(branch, encryptionKey).then(function (encryptedBranch) {
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("POST", "/get_data", true);
+                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        xhr.onreadystatechange = function () {
+                            if (xhr.readyState === 4 && xhr.status === 200) {
+                                var responseData = JSON.parse(xhr.responseText);
+                                var exams = responseData.exams;
+                                if (exams && exams.length > 0) {
+                                    // Display each exam information                                    
+                                    for (var i = 0; i < exams.length; i++) {
+                                        var exam = exams[i];
+                                        var examMessage = "Date: " + exam.date + ", Subject: " + exam.subject;
+                                        // var examMessage = "Subject: "+exam;
+                                        createBotMessageElementWithTypewriter(chatBox, examMessage);
+                                    }
+                                } else {
+                                    // No exams found
+                                    // var examNotFoundMessage = "No upcoming exams found for the specified semester and branch.";
+                                    var examNotFoundMessage = "Mihir Devghare here"
+                                    createBotMessageElementWithTypewriter(chatBox, examNotFoundMessage);
+                                }
+                            }
+                        };
+
+
+                        xhr.send("data_type=sem_branch_response&sem=" + encodeURIComponent(encryptedSem) + "&branch=" + encodeURIComponent(encryptedBranch));
+                        // Reset subject and enrollment
+                        sem = "";
+                        branch = "";
+                    });
+                });
             }
-        }
-    };
-                xhr.send("data_type=sem_branch_response&sem=" + sem + "&branch=" + branch);
-                // Reset subject and enrollment
-                sem = "";
-                branch = "";
-            } 
+            else if (userMessage.toLowerCase() === "download previous year question papers") {
+                var enterSubjectForPDF = "Please enter the subject.";
+                createBotMessageElementWithTypewriter(chatBox, enterSubjectForPDF);
+                // Set the state to prompt for subject
+                subjectForPDF = "pending";
+            } else if (subjectForPDF == "pending") {
+                // If subjectForPDF is pending, store the subjectForPDF and initiate download
+                subjectForPDF = userMessage;
+
+                // Encrypt the subjectForPDF
+                encryptMessage(subjectForPDF, encryptionKey).then(function (encryptedSubjectForPDF) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/get_data", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            var responseData = JSON.parse(xhr.responseText);
+                            var downloadMessage = responseData.message;
+                            // alert("Mihir Devghare")
+                            createBotMessageElementWithTypewriter(chatBox, downloadMessage);
+                        }
+                    };
+
+                    // Send encrypted subjectForPDF to server
+                    xhr.send("data_type=download_previous_yr_paper&subjectForPDF=" + encodeURIComponent(encryptedSubjectForPDF));
+
+                    // Reset subjectForPDF
+                    subjectForPDF = "";
+                });
+            }
+
             else {
                 // Handle other messages here
                 // For now, let's just echo the user's message
-                var botMessageElement = document.createElement("div");
-                botMessageElement.className = "message bot-message";
-                botMessageElement.textContent = " I'm sorry, I didn't understand that.";
-                chatBox.appendChild(botMessageElement);
+                defaultMessage = "I'm Sorry, I didn't understand that";
+                createBotMessageElementWithTypewriter(chatBox, defaultMessage);
             }
 
             // Scroll to the bottom of the chat box
             chatBox.scrollTop = chatBox.scrollHeight;
 
-            // Clear input field
-            document.getElementById("user-message").value = "";
+            // Clear input field if not clicked on link
+            if (!message) {
+                document.getElementById("user-message").value = "";
+            }
+        }
+
+        // Function to create a bot message element with typewriter effect
+        function createBotMessageElementWithTypewriter(chatBox, message) {
+            var botMessageElement = document.createElement("div");
+            botMessageElement.className = "message bot-message";
+            chatBox.appendChild(botMessageElement);
+
+            // Initialize Typed.js for typewriter effect
+            new Typed(botMessageElement, {
+                strings: [message],
+                // typeSpeed: 20, // Adjust speed as needed
+                typeSpeed: 10,
+                showCursor: false, // Hide cursor
+            });
+
+            // Scroll to the bottom of the chat box
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
 
         function isGreeting(message) {
@@ -238,5 +366,7 @@
             return greetings.includes(message.toLowerCase());
         }
     </script>
+
 </body>
+
 </html>

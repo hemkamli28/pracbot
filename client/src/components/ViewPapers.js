@@ -22,7 +22,7 @@ const ViewPapers = () => {
   const getPdf = async () => {
     try {
       const result = await axios.get(`${process.env.REACT_APP_SERVERURL}/paper/all`);
-      console.log(result.data.papers);
+      console.log("papers",result.data.papers);
       setAllPapers(result.data.papers);
     } catch (error) {
       console.log(error);

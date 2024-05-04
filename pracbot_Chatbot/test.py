@@ -3,7 +3,6 @@ from bson import ObjectId
 from flask import Flask, request, jsonify, render_template, send_file
 import shutil
 from Crypto.Cipher import AES
-from flask_cors import CORS
 import base64
 from datetime import datetime
 import os
@@ -18,7 +17,6 @@ SOLUTION_COLLECTION_NAME = "solutions"
 
 # Initialize Flask app
 app = Flask(__name__)
-app(CORS)
 # Connect to MongoDB
 try:
     # Connect to the MongoDB server

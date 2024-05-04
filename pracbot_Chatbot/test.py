@@ -260,5 +260,5 @@ def download_pdf(subjectName):
 
 
 if __name__ == "__main__":
-    app.run(debug=False, port=10000)
+    app.run(host='0.0.0.0',debug=False, port=10000)
     

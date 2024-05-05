@@ -39,8 +39,8 @@ const StudentDashboard = () => {
                 {/* Your chatbot component */}
                 <iframe
                   src="http://localhost:5002/"  
-                  width="400px"
-                  height="500px"
+                  width="500px"
+                  height="550px"
                   title="Chatbot"
                   style={{ border: 'none' }}
                 />

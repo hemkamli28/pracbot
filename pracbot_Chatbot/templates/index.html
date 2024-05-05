@@ -184,7 +184,7 @@
                 <!-- Initial message with typewriter effect -->
                 <script>
                     window.onload = function () {
-                        var initialMessage = `Welcome to <b>PracBOT!</b> How can I assist you with? <br><br> <button class='button-17'> <a style='text-decoration:none; color:#2980b9;' href=\"#\" onclick=\"sendMessage('Check Score')\" style=\"color: white;\">CHECK SCORE</a> </button>  <button class='button-17'> <a style='text-decoration:none; color:#2980b9;' href=\"#\" onclick=\"sendMessage('Check Scheduled Exam')\" style=\"color: white;\">CHECK SCHEDULED EXAMS</a> </button><br>  <button class='button-17' style='margin-top:7px;'> <a style='text-decoration:none; color:#2980b9;' href=\"#\" onclick=\"sendMessage('Download Previous Year Question Papers')\" style=\"color: white;\">DOWNLOAD PREVIOUS YEAR QUESTION PAPERS</a></button>`;
+                        var initialMessage = `Welcome to <b>PracBOT!</b> How can I assist you with? <br><br> <button class='button-17'> <a style='text-decoration:none; color:#2980b9;' href=\"#\" onclick=\"sendMessage('Check Score')\" style=\"color: white;\">CHECK SCORE</a> </button>  <button class='button-17' style='margin-top:7px;'> <a style='text-decoration:none; color:#2980b9;' href=\"#\" onclick=\"sendMessage('Check Scheduled Exam')\" style=\"color: white;\">CHECK SCHEDULED EXAMS</a> </button><br>  <button class='button-17' style='margin-top:7px;'> <a style='text-decoration:none; color:#2980b9;' href=\"#\" onclick=\"sendMessage('Download Previous Year Question Papers')\" style=\"color: white;\">DOWNLOAD PREVIOUS YEAR QUESTION PAPERS</a></button>`;
                         var chatBox = document.getElementById("chat-box");
                         createBotMessageElementWithTypewriter(chatBox, initialMessage);
                     };
@@ -251,7 +251,7 @@
         function sendMessage(message) {
             var userMessage = message || document.getElementById("user-message").value;
 
-            var initialMessage = `Welcome to <b>PracBOT!</b> How can I assist you with? <br><br> <button class='button-17'> <a style='text-decoration:none; color:#2980b9;' href=\"#\" onclick=\"sendMessage('Check Score')\" style=\"color: white;\">CHECK SCORE</a> </button> <button class='button-17'> <a style='text-decoration:none; color:#2980b9;' href=\"#\" onclick=\"sendMessage('Check Scheduled Exam')\" style=\"color: white;\">CHECK SCHEDULED EXAMS</a> </button><br> <button class='button-17' style='margin-top:7px;'> <a style='text-decoration:none; color:#2980b9;' href=\"#\" onclick=\"sendMessage('Download Previous Year Question Papers')\" style=\"color: white;\">DOWNLOAD PREVIOUS YEAR QUESTION PAPERS</a></button>`;
+            var initialMessage = `Welcome to <b>PracBOT!</b> How can I assist you with? <br><br> <button class='button-17'> <a style='text-decoration:none; color:#2980b9;' href=\"#\" onclick=\"sendMessage('Check Score')\" style=\"color: white;\">CHECK SCORE</a> </button> <button class='button-17' style='margin-top:7px;'> <a style='text-decoration:none; color:#2980b9;' href=\"#\" onclick=\"sendMessage('Check Scheduled Exam')\" style=\"color: white;\">CHECK SCHEDULED EXAMS</a> </button><br> <button class='button-17' style='margin-top:7px;'> <a style='text-decoration:none; color:#2980b9;' href=\"#\" onclick=\"sendMessage('Download Previous Year Question Papers')\" style=\"color: white;\">DOWNLOAD PREVIOUS YEAR QUESTION PAPERS</a></button>`;
 
 
             var chatBox = document.getElementById("chat-box");

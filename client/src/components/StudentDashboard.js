@@ -38,7 +38,7 @@ const StudentDashboard = () => {
               <div style={{ position: 'absolute', bottom: '100%', right: 0 }}>
                 {/* Your chatbot component */}
                 <iframe
-                  src="http://localhost:5002/"  
+                  src="https://pracbot-chat.onrender.com/"  
                   width="500px"
                   height="550px"
                   title="Chatbot"

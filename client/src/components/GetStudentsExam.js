@@ -34,6 +34,7 @@ const GetStudentsExam = () => {
           );
           if (ongoingResponse.data.success) {
             setOngoingExam(ongoingResponse.data.exam);
+            console.log("chalega",ongoingResponse)
           }
         } catch (error) {
           console.log(error);
@@ -46,6 +47,8 @@ const GetStudentsExam = () => {
             { headers }
           );
           if (todayResponse.data.success) {
+            console.log("chalega today",todayResponse)
+
             setAllExams(todayResponse.data.exams);
           }
         } catch (error) {
@@ -59,6 +62,8 @@ const GetStudentsExam = () => {
           { headers }
         );
         if (upcomingResponse.data.success) {
+          console.log("chalega all",upcomingResponse)
+
           setAllExams(prevExams => [...prevExams, ...upcomingResponse.data.exams]);
         }
           
@@ -134,15 +139,15 @@ const GetStudentsExam = () => {
           {ongoingExam && (
             <div className="bg-indigo-200 p-4 rounded-md shadow-md cursor-pointer mb-4">
               <div className="flex flex-wrap justify-around items-center">
-                <div onClick={() => showPdf(ongoingExam.filename)}>
-                  <PdfThumbnail pdfFile={`${process.env.REACT_APP_SERVERURL}/uploads/${ongoingExam.filename}`} />
+                <div onClick={() => showPdf(ongoingExam[0].filename)}>
+                  <PdfThumbnail pdfFile={`${process.env.REACT_APP_SERVERURL}/uploads/${ongoingExam[0].filename}`} />
                 </div>
                 <div>
-                  <p className="font-bold">Exam: <span className="font-light">{ongoingExam.name}</span></p>
-                  <p className="font-bold">Subject: <span className="font-light">{ongoingExam.subject}</span></p>
-                  <p className="font-bold">Date: <span className="font-light">{formatDate(ongoingExam.date)}</span></p>
-                  <p className="font-bold">Instructor: <span className="font-light">{ongoingExam.scheduledBy.fname} {ongoingExam.scheduledBy.lname} </span></p>
-                  <p className="font-bold">Ends in: <ExamTiming deadline={ongoingExam.endTime} /></p>
+                  <p className="font-bold">Exam: <span className="font-light">{ongoingExam[0].name}</span></p>
+                  <p className="font-bold">Subject: <span className="font-light">{ongoingExam[0].subject}</span></p>
+                  <p className="font-bold">Date: <span className="font-light">{ongoingExam[0].date}</span></p>
+                  <p className="font-bold">Instructor: <span className="font-light">{ongoingExam[0].scheduledBy.fname} {ongoingExam[0].scheduledBy.lname} </span></p>
+                  <p className="font-bold">Ends in: <ExamTiming deadline={ongoingExam[0].endTime} /></p>
                   <div>
                     <input
                       type="file"
@@ -150,7 +155,7 @@ const GetStudentsExam = () => {
                       onChange={(e) => setSelectedFile(e.target.files[0])}
                     />
                     <button
-                      onClick={() => handleFileUpload(ongoingExam._id)}
+                      onClick={() => handleFileUpload(ongoingExam[0]._id)}
                       type="submit"
                       className="w-full mt-4 bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-800"
                     >
@@ -172,7 +177,7 @@ const GetStudentsExam = () => {
                 key={exam._id}
               >
                 <div className="flex flex-col justify-center flex-wrap w-[19rem]">
-                  <p className="font-bold">Exam: <span className="font-light">{exam.name}</span></p>
+                  <p className="font-bold">Exam: <span className="font-light">{exam?.name}</span></p>
                   <p className="font-bold">Subject: <span className="font-light">{exam.subject}</span></p>
                   <p className="font-bold">Instructor: <span className="font-light">{exam.scheduledBy.fname} {exam.scheduledBy.lname} </span></p>
                   <p className="font-bold">Date: <span className="font-light">{formatDate(exam.date)}</span></p>

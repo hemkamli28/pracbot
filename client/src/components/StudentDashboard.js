@@ -36,7 +36,6 @@ const StudentDashboard = () => {
             <>
               <button onClick={toggleChatbot} className={`transition-transform duration-500 transform ${isAnimating ? 'rotate-180' : 'rotate-0'}`}><IoMdClose className='text-blue-800 text-[3rem]' /></button>
               <div style={{ position: 'absolute', bottom: '100%', right: 0 }}>
-                {/* Your chatbot component */}
                 <iframe
                   src="https://pracbot-chat.onrender.com/"  
                   width="500px"

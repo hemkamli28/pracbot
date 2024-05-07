@@ -71,30 +71,62 @@ const uploadExam = async (req, res) => {
     }
 }
 
+// const getStudentOngoing = async (req, res) => {
+//     try {
+//         const student = await User.findOne({ email: req.user.email });
+//         const exams = await Exam.find({ sem: student.sem, branch: student.branch }).populate("scheduledBy", "fname lname");
+        
+//         const currentTime = new Date();
+//         for (const exam of exams) {
+//             const startTime = new Date(exam.startTime); // Convert string to Date object
+//             const endTime = new Date(exam.endTime);     // Convert string to Date object
+//             console.log('Current Time:', currentTime.toISOString());
+//             console.log('Start Time:', startTime.toISOString());
+//             console.log('End Time:', endTime.toISOString());
+//             const currentTimeUTC = new Date().toISOString();
+// console.log("------------------------------------------------------")
+//             console.log('currentTimeUTC:', currentTimeUTC);
+// console.log('startTime:', startTime.toISOString());
+// console.log('endTime:', endTime.toISOString());
+// console.log('Comparison result:', currentTimeUTC >= startTime, currentTimeUTC <= endTime);
+//             console.log("currentTimeUTC", currentTimeUTC)
+//             if (currentTime >= startTime && currentTime <= endTime) {
+//                 console.log('Exam found:', exam);
+//                 return res.status(200).json({ exam, success: true });
+//             } else {
+//                 console.log('Exam not ongoing:', exam);
+//             }
+//         }
+//         console.log('No ongoing exams found');
+//         return res.status(404).json({ success: false });
+//     } catch (error) {
+//         console.error(error);
+//         return res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// }
 const getStudentOngoing = async (req, res) => {
     try {
+        const currentTime = new Date(); // Get current UTC time
+        const todayDate = currentTime.toISOString().slice(0, 10); // Get today's date in "YYYY-MM-DD" format
+
         const student = await User.findOne({ email: req.user.email });
-        const exams = await Exam.find({ sem: student.sem, branch: student.branch }).populate("scheduledBy", "fname lname");
-        
-        const currentTime = new Date();
-        for (const exam of exams) {
-            const startTime = new Date(exam.startTime);
-            const endTime = new Date(exam.endTime);
-            console.log('Current Time:', currentTime);
-            console.log('Start Time:', startTime);
-            console.log('End Time:', endTime);
-            if (currentTime >= startTime && currentTime <= endTime) {
-                console.log('Exam found:', exam);
-                return res.status(200).json({ exam, success: true });
-            }
-        }
-        console.log('No ongoing exams found');
-        return res.status(404).json({ success: false });
+
+        // Find exams where current time is between startTime and endTime and the exam is today
+        const ongoingExams = await Exam.find({
+            sem: student.sem,
+            branch: student.branch,
+            date: todayDate, // Exam date is today
+            startTime: { $lte: currentTime }, // Exam starts before or at current time
+            endTime: { $gt: currentTime } // Exam ends after current time
+        });
+
+        return res.status(200).json({ exam: ongoingExams, success: true });
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Internal Server Error' });
+        console.error('Error fetching ongoing exams:', error);
+        throw error; // Propagate error to the caller
     }
-}
+};
+
 const deleteExam = async (req, res) => {
     try {
         const { examId } = req.params;

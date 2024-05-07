@@ -35,6 +35,7 @@ function StudentGrades() {
                     `${process.env.REACT_APP_SERVERURL}/solution/grades`, // Update endpoint
                     { headers }
                 );
+                console.log(response.data.solutions)
                 setSolutions(response.data.solutions);
             } catch (error) {
                 console.error('Error fetching solutions:', error);
@@ -103,9 +104,9 @@ function StudentGrades() {
                 <tbody>
                     {solutions.map((solution) => (
                         <tr key={solution._id} >
-                            <td className="border px-4 py-2 border-gray-300">{solution.exam.name}</td>
-                            <td className="border px-4 py-2 border-gray-300">{formatDate(solution.exam.date)}</td>
-                            <td className="border px-4 py-2 border-gray-300">{solution.exam.subject}</td>
+                            <td className="border px-4 py-2 border-gray-300">{solution.exam?.name}</td>
+                            <td className="border px-4 py-2 border-gray-300">{formatDate(solution.exam?.date)}</td>
+                            <td className="border px-4 py-2 border-gray-300">{solution.exam?.subject}</td>
                             <td className="border px-4 py-2 border-gray-300"> {solution.grade < 1 ? "N/A" : solution.grade}</td>
                             <td className="border py-2 border-gray-300 flex justify-center gap-4 ">
                                 <button type="submit" className="bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-800 " onClick={() => handleViewSolution(solution)}>

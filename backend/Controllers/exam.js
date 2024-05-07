@@ -119,11 +119,15 @@ const getStudentOngoing = async (req, res) => {
             startTime: { $lte: currentTime }, // Exam starts before or at current time
             endTime: { $gt: currentTime } // Exam ends after current time
         });
-
-        return res.status(200).json({ exam: ongoingExams, success: true });
+        if(ongoingExams.length > 0){
+            return res.status(200).json({ exam: ongoingExams, success: true });
+        }
+        return res.status(404).json({  success: false })
     } catch (error) {
+        
         console.error('Error fetching ongoing exams:', error);
         throw error; // Propagate error to the caller
+        return res.status(500).json({  success: false })
     }
 };
 
